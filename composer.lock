@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "65e85f9f959c0b087110331754d451cf",
+    "content-hash": "6d5518386674fbe5990f308de8fa1837",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -2788,6 +2788,35 @@
                 }
             ],
             "time": "2021-09-25T23:10:38+00:00"
+        },
+        {
+            "name": "smelt-labs/laravel-pocket-monsters",
+            "version": "dev-main",
+            "dist": {
+                "type": "path",
+                "url": "packages/laravel-pocket-monsters",
+                "reference": "9d748c0af11261e7288325b6442295fc1c6c39ca"
+            },
+            "require": {
+                "php": ">=8.0"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "SmeltLabs\\PocketMonsters\\PocketMonsterServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "SmeltLabs\\PocketMonsters\\": "src/"
+                }
+            },
+            "description": "A Laravel wrapper for pokeapi",
+            "transport-options": {
+                "relative": true
+            }
         },
         {
             "name": "symfony/console",
@@ -7789,7 +7818,9 @@
     ],
     "aliases": [],
     "minimum-stability": "dev",
-    "stability-flags": [],
+    "stability-flags": {
+        "smelt-labs/laravel-pocket-monsters": 20
+    },
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
