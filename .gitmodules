@@ -1,0 +1,3 @@
+[submodule "packages/laravel-pocket-monsters"]
+	path = packages/laravel-pocket-monsters
+	url = git@github.com:SMELT-Labs/laravel-pocket-monsters.git
