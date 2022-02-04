@@ -2795,9 +2795,11 @@
             "dist": {
                 "type": "path",
                 "url": "packages/laravel-pocket-monsters",
-                "reference": "9d748c0af11261e7288325b6442295fc1c6c39ca"
+                "reference": "d91d63ba09b00f1b6d5568882652aa81833e6746"
             },
             "require": {
+                "guzzlehttp/guzzle": "^7.2",
+                "laravel/framework": "^9.0",
                 "php": ">=8.0"
             },
             "type": "library",
@@ -2810,7 +2812,7 @@
             },
             "autoload": {
                 "psr-4": {
-                    "SmeltLabs\\PocketMonsters\\": "src/"
+                    "SmeltLabs\\PocketMonsters\\": "src/SmeltLabs/PocketMonsters"
                 }
             },
             "description": "A Laravel wrapper for pokeapi",
@@ -5641,12 +5643,12 @@
             },
             "type": "library",
             "autoload": {
-                "psr-4": {
-                    "DeepCopy\\": "src/DeepCopy/"
-                },
                 "files": [
                     "src/DeepCopy/deep_copy.php"
-                ]
+                ],
+                "psr-4": {
+                    "DeepCopy\\": "src/DeepCopy/"
+                }
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
