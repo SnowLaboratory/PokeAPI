@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ExampleController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -22,9 +23,7 @@ Route::get('/gen', function () {
 });
 
 
-Route::get('/national-dex', function () {
-    return view('nationaldex');
-});
+Route::get('/national-dex', [ExampleController::class, 'getNationalDex']);
 
 Route::get('/about', function () {
     return view('about');
