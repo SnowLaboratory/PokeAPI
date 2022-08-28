@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ExampleController;
+use App\Http\Controllers\GenerationController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -18,8 +19,13 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/gen', function () {
-    return view('gen');
+Route::prefix('/gen')->group(function (){
+    Route::get('/', function() {
+        return view ('gen');
+    });
+    Route::get('/kanto', [GenerationController::class, 'getGeneration']);
+    Route::get('/{gen}', [GenerationController::class, 'getGeneration']);
+
 });
 
 

@@ -2,12 +2,12 @@
     <div class="grid grid-cols-1 gap-2">
         <div class="border-2 border-black rounded-xl w-80 py-2 px-3 bg-white mt-2">
             <div class="ml-1 text-center">
-                <a href="#">Gen 1</a>
+                <a href="/gen/generation-i">Gen 1</a>
             </div>
         </div>
         <div class="border-2 border-black rounded-xl w-80 py-2 px-3 bg-white mt-2">
             <div class="ml-1 text-center">
-                <a href="#">Gen 2</a>
+                <a href="/gen/generation-ii">Gen 2</a>
             </div>
         </div>
         <div class="border-2 border-black rounded-xl w-80 py-2 px-3 bg-white mt-2">

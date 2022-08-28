@@ -11,7 +11,7 @@ use SmeltLabs\PocketMonsters\Facades\PokeAPI;
 class ExampleController extends Controller
 {
     /**
-     * Returns the first pae of every pokemon ever from using the ndex id numbering system.
+     * Returns the first page of every pokemon ever from using the ndex id numbering system.
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
      */
     public function getNationalDex() {
@@ -32,7 +32,6 @@ class ExampleController extends Controller
         $results["nextPage"] = url()->current() . "?" . http_build_query([
             "page" => ($requestedPage < $results["maxPage"] ? $requestedPage + 1 : $results["maxPage"])
         ]);
-
         return view('nationaldex', $results);
     }
 }
