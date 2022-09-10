@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Http;
 use SmeltLabs\PocketMonsters\DataFetcher;
 use SmeltLabs\PocketMonsters\EndpointBuilder;
 use SmeltLabs\PocketMonsters\Facades\PokeAPI;
+use App\Models\Pokemon;
 
 class GenerationController extends  Controller
 {
@@ -26,4 +27,6 @@ class GenerationController extends  Controller
 
         return view('kanto', compact('results'));
     }
+
+
 }
