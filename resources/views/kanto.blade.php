@@ -5,8 +5,8 @@
         <p>Kanto</p>
     </div>
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2 max-w-screen-xl mx-auto">
-        @foreach($results['pokemon_species'] as $result)
-            <x-pokedex-card :name="$result['name']" />
+        @foreach($results['pokemon_species'] as $pokemon)
+            <x-pokedex-card :name="$pokemon['name']" />
         @endforeach
     </div>
 </x-app-layout>
