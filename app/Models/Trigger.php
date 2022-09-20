@@ -9,6 +9,8 @@ class Trigger extends Model
 {
     use HasFactory;
 
+    public $timestamps = false;
+
     public function evolutionDetails()
     {
         return $this->belongsTo(EvolutionDetails::class);

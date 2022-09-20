@@ -10,4 +10,6 @@ use Illuminate\Database\Eloquent\Model;
 class Item extends Model
 {
     use HasFactory, HasCategories, HasImages;
+
+    public $timestamps = false;
 }

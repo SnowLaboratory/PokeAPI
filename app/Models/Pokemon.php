@@ -15,6 +15,8 @@ class Pokemon extends Model
 
     protected $guarded = [];
 
+    public $timestamps = false;
+
     public function types()
     {
         return $this->belongsToMany(Type::class);

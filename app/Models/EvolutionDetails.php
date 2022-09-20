@@ -10,6 +10,8 @@ class EvolutionDetails extends Model
 {
     use HasFactory, HasMetas;
 
+    public $timestamps = false;
+
     public function trigger() {
         return $this->hasOne(Trigger::class);
     }

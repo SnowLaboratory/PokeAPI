@@ -9,4 +9,6 @@ use Illuminate\Database\Eloquent\Model;
 class Ability extends Model
 {
     use HasFactory, HasPokemon;
+
+    public $timestamps = false;
 }
