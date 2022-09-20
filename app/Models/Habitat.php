@@ -9,4 +9,6 @@ use Illuminate\Database\Eloquent\Model;
 class Habitat extends Model
 {
     use HasFactory, HasPokemon;
+
+    public $timestamps = false;
 }

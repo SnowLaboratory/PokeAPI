@@ -9,4 +9,6 @@ use Illuminate\Database\Eloquent\Model;
 class Move extends Model
 {
     use HasFactory, HasCategories;
+
+    public $timestamps = false;
 }

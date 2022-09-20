@@ -9,6 +9,8 @@ class EvolutionChain extends Model
 {
     use HasFactory;
 
+    public $timestamps = false;
+
     public function evolutionDetails()
     {
         return $this->hasOne(EvolutionDetails::class);

@@ -11,4 +11,6 @@ class Weakness extends Model
     use HasFactory, HasPokemon;
 
     protected $guarded = [];
+
+    public $timestamps = false;
 }
