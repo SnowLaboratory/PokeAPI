@@ -3,10 +3,7 @@
 namespace Database\Seeders;
 
 use App\Jobs\ImportPokemon;
-use App\Models\Pokemon;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-use SmeltLabs\PocketMonsters\DataFetcher;
 use SmeltLabs\PocketMonsters\EndpointBuilder;
 use Illuminate\Support\Facades\Http;
 
@@ -31,8 +28,7 @@ class PokemonSeeder extends Seeder
 
         foreach ($data['results'] as $info) {
 
-            $pokemonInfoUrl = $info['url'];
-            ImportPokemon::dispatch($pokemonInfoUrl);
+            ImportPokemon::dispatch($info);
 
             $this->command->getOutput()->progressAdvance();
         }

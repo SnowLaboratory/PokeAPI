@@ -16,15 +16,17 @@ class ImportPokemon implements ShouldQueue
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     private $pokemonInfoUrl;
+    private $pokemonName;
 
     /**
      * Create a new job instance.
      *
      * @return void
      */
-    public function __construct($pokemonInfoUrl)
+    public function __construct($info)
     {
-        $this->pokemonInfoUrl = $pokemonInfoUrl;
+        $this->pokemonInfoUrl = $info['url'];
+        $this->pokemonName = $info['name'];
     }
 
     /**
@@ -38,7 +40,9 @@ class ImportPokemon implements ShouldQueue
 
         $species = Http::get($pokemon['species']['url'])->json() ?? [];
 
-        Pokemon::create([
+        $types = collect($pokemon['types'])->pluck('type.name');
+
+        $pokemonModel = Pokemon::firstOrCreate([
             "name" => $pokemon['name'],
             "weight" => $pokemon['weight'],
             "height" => $pokemon['height'],
@@ -46,5 +50,10 @@ class ImportPokemon implements ShouldQueue
             "is_legendary" => $species['is_legendary'],
             "is_mythical" => $species['is_mythical'],
         ]);
+        
+        foreach($types as $pokemonTypeName)
+        {
+            ImportType::dispatch($pokemonTypeName, $pokemonModel);
+        }
     }
 }
