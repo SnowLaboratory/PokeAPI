@@ -42,6 +42,8 @@ class ImportPokemon implements ShouldQueue
 
         $types = collect($pokemon['types'])->pluck('type.name');
 
+        $games = collect($pokemon['game_indices'])->pluck('version.name');
+
         $pokemonModel = Pokemon::firstOrCreate([
             "name" => $pokemon['name'],
             "weight" => $pokemon['weight'],
@@ -54,6 +56,11 @@ class ImportPokemon implements ShouldQueue
         foreach($types as $pokemonTypeName)
         {
             ImportType::dispatch($pokemonTypeName, $pokemonModel);
+        }
+
+        foreach($games as $pokemonFeaturedIn)
+        {
+            ImportGame::dispatch($pokemonFeaturedIn, $pokemonModel);
         }
     }
 }

@@ -20,7 +20,7 @@ return new class extends Migration
             $table->string('name');
         });
 
-        Schema::create('pokemon_ability', function (Blueprint $table) {
+        Schema::create('ability_pokemon', function (Blueprint $table) {
             $table->foreignIdFor(Pokemon::class);
             $table->foreignIdFor(Ability::class);
         });
@@ -34,5 +34,6 @@ return new class extends Migration
     public function down()
     {
         Schema::dropIfExists('abilities');
+        Schema::dropIfExists('ability_pokemon');
     }
 };
