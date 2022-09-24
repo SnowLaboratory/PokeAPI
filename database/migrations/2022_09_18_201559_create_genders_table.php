@@ -21,7 +21,7 @@ return new class extends Migration
             $table->integer('rate');
         });
 
-        Schema::create('pokemon_genders', function (Blueprint $table) {
+        Schema::create('gender_pokemon', function (Blueprint $table) {
             $table->foreignIdFor(Pokemon::class);
             $table->foreignIdFor(Gender::class);
 
@@ -36,5 +36,7 @@ return new class extends Migration
     public function down()
     {
         Schema::dropIfExists('genders');
+        Schema::dropIfExists('gender_pokemon');
+
     }
 };

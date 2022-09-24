@@ -33,5 +33,6 @@ return new class extends Migration
     public function down()
     {
         Schema::dropIfExists('images');
+        Schema::dropIfExists('has_images');
     }
 };

@@ -20,7 +20,7 @@ return new class extends Migration
             $table->string('name');
         });
 
-        Schema::create('pokemon_habitats', function (Blueprint $table) {
+        Schema::create('habitat_pokemon', function (Blueprint $table) {
             $table->foreignIdFor(Pokemon::class);
             $table->foreignIdFor(Habitat::class);
         });
@@ -34,5 +34,7 @@ return new class extends Migration
     public function down()
     {
         Schema::dropIfExists('habitats');
+        Schema::dropIfExists('habitat_pokemon');
+
     }
 };

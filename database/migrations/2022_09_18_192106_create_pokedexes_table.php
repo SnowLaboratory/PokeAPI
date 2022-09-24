@@ -32,5 +32,6 @@ return new class extends Migration
     public function down()
     {
         Schema::dropIfExists('pokedexes');
+        Schema::dropIfExists('has_pokedexes');
     }
 };
