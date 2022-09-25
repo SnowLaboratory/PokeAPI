@@ -4,17 +4,17 @@ namespace App\View\Components;
 
 use Illuminate\View\Component;
 
-class pokedex-card extends Component
+class NationalDexCard extends Component
 {
     /**
      * Create a new component instance.
      *
      * @return void
      */
-    public function __construct()
-    {
-        //
-    }
+    public function __construct(
+        public string $ndex,
+        public string $name,
+    ){}
 
     /**
      * Get the view / contents that represent the component.
@@ -23,6 +23,6 @@ class pokedex-card extends Component
      */
     public function render()
     {
-        return view('components.pokedex-card');
+        return view('components.national-dex-card');
     }
 }

@@ -4,7 +4,7 @@ namespace App\View\Components;
 
 use Illuminate\View\Component;
 
-class national-dex-card extends Component
+class GenerationCard extends Component
 {
     /**
      * Create a new component instance.
@@ -23,6 +23,6 @@ class national-dex-card extends Component
      */
     public function render()
     {
-        return view('components.national-dex-card');
+        return view('components.generation-card');
     }
 }
