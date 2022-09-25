@@ -10,6 +10,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\DB;
 
 class ImportType implements ShouldQueue
 {
@@ -26,10 +27,12 @@ class ImportType implements ShouldQueue
 
     public function handle()
     {
-        $type = Type::firstOrCreate([
-            "name" => $this->pokemonTypeName
-        ]);
+        DB::transaction(function () {
+            $type = Type::firstOrCreate([
+                "name" => $this->pokemonTypeName
+            ]);
 
-        $type->pokemon()->save($this->pokemon);
+            $type->pokemon()->save($this->pokemon);
+        });
     }
 }

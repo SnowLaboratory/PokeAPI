@@ -52,15 +52,15 @@ class ImportPokemon implements ShouldQueue
             "is_legendary" => $species['is_legendary'],
             "is_mythical" => $species['is_mythical'],
         ]);
-        
+
         foreach($types as $pokemonTypeName)
         {
-            ImportType::dispatch($pokemonTypeName, $pokemonModel);
+            ImportType::dispatchSync($pokemonTypeName, $pokemonModel);
         }
 
         foreach($games as $pokemonFeaturedIn)
         {
-            ImportGame::dispatch($pokemonFeaturedIn, $pokemonModel);
+            ImportGame::dispatchSync($pokemonFeaturedIn, $pokemonModel);
         }
     }
 }

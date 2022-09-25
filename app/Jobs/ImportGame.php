@@ -10,6 +10,8 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\DB;
+use PDO;
 
 class ImportGame implements ShouldQueue
 {
@@ -26,10 +28,12 @@ class ImportGame implements ShouldQueue
 
     public function handle()
     {
-        $game = Game::firstOrCreate([
-            'name' => $this->pokemonFeaturedIn
-        ]);
+        DB::transaction(function () {
+            $game = Game::firstOrCreate([
+                'name' => $this->pokemonFeaturedIn
+            ]);
 
-        $game->pokemon()->save($this->pokemon);
+            $game->pokemon()->save($this->pokemon);
+        });
     }
 }
