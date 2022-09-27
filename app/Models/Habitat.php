@@ -10,5 +10,7 @@ class Habitat extends Model
 {
     use HasFactory, HasPokemon;
 
+    public $guarded = [];
+
     public $timestamps = false;
 }
