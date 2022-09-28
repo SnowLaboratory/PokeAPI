@@ -10,5 +10,7 @@ class Gender extends Model
 {
     use HasFactory, HasPokemon;
 
+    public $guarded = [];
+
     public $timestamps = false;
 }

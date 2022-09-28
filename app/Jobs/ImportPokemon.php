@@ -44,6 +44,8 @@ class ImportPokemon implements ShouldQueue
 
         $games = collect($pokemon['game_indices'])->pluck('version.name');
 
+        $abilities = collect($pokemon['abilities'])->pluck('ability.name');
+
         $habitat = $species['habitat'];
 
         $pokemonModel = Pokemon::firstOrCreate([
@@ -68,6 +70,11 @@ class ImportPokemon implements ShouldQueue
         if (isset($habitat))
         {
             ImportHabitat::dispatchSync($habitat['name'], $pokemonModel);
+        }
+
+        foreach($abilities as $ability)
+        {
+            ImportAbility::dispatchSync($ability, $pokemonModel);
         }
     }
 }
