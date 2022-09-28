@@ -2,17 +2,14 @@
 
 namespace App\Jobs;
 
-use App\Models\Ability;
-use App\Models\Pokemon;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Support\Facades\DB;
 
-class ImportAbility implements ShouldQueue
+class ImportGender implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
@@ -21,10 +18,10 @@ class ImportAbility implements ShouldQueue
      *
      * @return void
      */
-    public function __construct(
-        private string $pokemonAbility,
-        private Pokemon $pokemon
-    ){}
+    public function __construct()
+    {
+        //
+    }
 
     /**
      * Execute the job.
@@ -33,12 +30,6 @@ class ImportAbility implements ShouldQueue
      */
     public function handle()
     {
-        DB::transaction( function ()
-        {
-            $ability = Ability::firstOrCreate([
-                'name' => $this->pokemonAbility
-            ]);
-            $ability->pokemon()->save($this->pokemon);
-        });
+        //
     }
 }
