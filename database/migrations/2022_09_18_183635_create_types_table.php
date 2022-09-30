@@ -24,6 +24,12 @@ return new class extends Migration
             $table->foreignIdFor(Pokemon::class);
             $table->foreignIdFor(Type::class);
         });
+
+        Schema::create('damage_relation', function (Blueprint $table) {
+            $table->foreignIdFor(Type::class, 'attacking_type_id');
+            $table->foreignIdFor(Type::class, 'defending_type_id');
+            $table->unsignedFloat('multiplier');
+        });
     }
 
     /**

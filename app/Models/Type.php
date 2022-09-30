@@ -14,4 +14,9 @@ class Type extends Model
 
     public $timestamps = false;
 
+    public function damageRelations()
+    {
+        return $this->belongsToMany(Type::class, 'damage_relation', 'attacking_type_id', 'defending_type_id')->using(DamageRelation::class);
+    }
+
 }
