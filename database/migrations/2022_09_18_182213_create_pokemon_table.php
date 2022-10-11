@@ -21,6 +21,8 @@ return new class extends Migration
             $table->integer('capture_rate');
             $table->boolean('is_legendary');
             $table->boolean('is_mythical');
+            $table->string('pokemon_info_url');
+            $table->string('pokemon_species_url');
         });
     }
 
