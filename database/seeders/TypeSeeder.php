@@ -25,14 +25,14 @@ class TypeSeeder extends Seeder
 
         // 2. Fetch all the types from the API
         $api = new EndpointBuilder();
-        $typesJson = Http::get($api->getAllTypes())->json() ?? [];
+        $typesJson = fetchJson($api->getAllTypes());
 
         // 3. Loop over a list of urls associated to each type
         $urls = collect($typesJson['results'])->pluck('url');
         foreach ($urls as $typeUrl) {
 
             // 4. Fetch all the data for a specific type
-            $typeJson = Http::get($typeUrl)->json() ?? [];
+            $typeJson = fetchJson($typeUrl);
 
             // 5. Assign variables for easy access.
             $typeName = $typeJson['name'];

@@ -24,14 +24,14 @@ class GameSeeder extends Seeder
 
         // 2. Fetch all the pokemon from the API
         $api = new EndpointBuilder();
-        $infoJson = Http::get($api->getAllPokemon())->json() ?? [];
+        $infoJson = fetchJson($api->getAllPokemon());
 
         // 3. Loop over a list of urls associated to each pokemon
         $urls = collect($infoJson['results'])->pluck('url');
         foreach ($urls as $pokemonUrl) {
 
             // 4. Fetch all the data for a specific pokemon
-            $pokemonJson = Http::get($pokemonUrl)->json() ?? [];
+            $pokemonJson = fetchJson($pokemonUrl);
 
             // 5. Assign variables for easy access.
             $pokemonName = $pokemonJson['name'];
