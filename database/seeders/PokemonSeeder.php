@@ -22,7 +22,7 @@ class PokemonSeeder extends Seeder
             "limit" => 10000,
         ]);
 
-        $data = Http::get($url)->json() ?? [];
+        $data = fetchJson($url);
 
         $this->command->getOutput()->progressStart($data['count']);
 

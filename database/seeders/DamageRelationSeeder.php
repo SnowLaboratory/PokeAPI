@@ -32,7 +32,7 @@ class DamageRelationSeeder extends Seeder
         {
             $url = $api->getTypeByName($pokemonTypeDB->name);
 
-            $damageRelation = Http::get($url)->json()['damage_relations'] ?? [];
+            $damageRelation = fetchJson($url)['damage_relations'];
 
             foreach ($damageRelation['double_damage_from'] as $pokemonTypeApi)
             {

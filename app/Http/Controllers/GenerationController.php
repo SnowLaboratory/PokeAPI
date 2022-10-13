@@ -21,7 +21,7 @@ class GenerationController extends  Controller
     {
         $api = new EndpointBuilder();
         $baseEndpoint = $api->getGenerationByName($gen);
-        $results = Http::get($baseEndpoint)->json() ?? [];
+        $results = fetchJson($baseEndpoint);
 
 
         return view('kanto', compact('results'));

@@ -36,9 +36,9 @@ class ImportPokemon implements ShouldQueue
      */
     public function handle()
     {
-        $pokemon = Http::get($this->pokemonInfoUrl)->json() ?? [];
+        $pokemon = fetchJson($this->pokemonInfoUrl);
 
-        $species = Http::get($pokemon['species']['url'])->json() ?? [];
+        $species = fetchJson($pokemon['species']['url']);
 
         $types = collect($pokemon['types'])->pluck('type.name');
 
