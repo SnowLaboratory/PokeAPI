@@ -55,6 +55,8 @@ class ImportPokemon implements ShouldQueue
             "capture_rate" => $species['capture_rate'],
             "is_legendary" => $species['is_legendary'],
             "is_mythical" => $species['is_mythical'],
+            "pokemon_info_url" => $this->pokemonInfoUrl,
+            "pokemon_species_url" => $pokemon['species']['url']
         ]);
 
         foreach($types as $pokemonTypeName)

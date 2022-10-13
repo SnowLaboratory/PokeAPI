@@ -19,7 +19,7 @@ class ImportType implements ShouldQueue
     private string $pokemonTypeName;
     private Pokemon $pokemon;
 
-    public function __construct(string $pokemonTypeName, Pokemon $pokemon )
+    public function __construct(string $pokemonTypeName, Pokemon $pokemon)
     {
         $this->pokemonTypeName = $pokemonTypeName;
         $this->pokemon = $pokemon;

@@ -18,13 +18,7 @@ class DamageRelationSeeder extends Seeder
      */
     public function run()
     {
-        /**
-         *step 1 fetch all pokemon types from the db
-         *step 2 loop over each pokemon type
-         * step 3 get all damage relation data for current type from api
-         * step 4 loop over api data to get existing database records for current pokemon type
-         * step 5 save
-         */
+        DamageRelation::truncate();
 
         $api = new EndpointBuilder();
 
@@ -39,8 +33,8 @@ class DamageRelationSeeder extends Seeder
                 $damage = Type::where('name', $pokemonTypeApi['name'])->firstOrFail();
 
                 DamageRelation::firstOrCreate([
-                    'attacking_type_id' => $pokemonTypeDB->id,
-                    'defending_type_id' => $damage->id,
+                    'attacking_type_id' => $damage->id,
+                    'defending_type_id' => $pokemonTypeDB->id,
                     'multiplier' => 2
                 ]);
 
@@ -52,8 +46,8 @@ class DamageRelationSeeder extends Seeder
                 $damage = Type::where('name', $pokemonTypeApi['name'])->firstORFail();
 
                 DamageRelation::firstOrCreate([
-                    'attacking_type_id' => $damage->id,
-                    'defending_type_id' => $pokemonTypeDB->id,
+                    'attacking_type_id' => $pokemonTypeDB->id,
+                    'defending_type_id' => $damage->id,
                     'multiplier' => 2
                 ]);
 
@@ -64,8 +58,8 @@ class DamageRelationSeeder extends Seeder
                 $damage = Type::where('name', $pokemonTypeApi['name'])->firstORFail();
 
                 DamageRelation::firstOrCreate([
-                    'attacking_type_id' => $pokemonTypeDB->id,
-                    'defending_type_id' => $damage->id,
+                    'attacking_type_id' => $damage->id,
+                    'defending_type_id' => $pokemonTypeDB->id,
                     'multiplier' => 0.5
                 ]);
 
@@ -76,26 +70,28 @@ class DamageRelationSeeder extends Seeder
                 $damage = Type::where('name', $pokemonTypeApi['name'])->firstORFail();
 
                 DamageRelation::firstOrCreate([
-                    'attacking_type_id' => $damage->id,
-                    'defending_type_id' => $pokemonTypeDB->id,
+                    'attacking_type_id' => $pokemonTypeDB->id,
+                    'defending_type_id' => $damage->id,
                     'multiplier' => 0.5
                 ]);
             }
 
             foreach ($damageRelation['no_damage_from'] as $pokemonTypeApi)
             {
+                $damage = Type::where('name', $pokemonTypeApi['name'])->firstORFail();
                 DamageRelation::firstOrCreate([
-                    'attacking_type_id' => $pokemonTypeDB->id,
-                    'defending_type_id' => $damage->id,
+                    'attacking_type_id' => $damage->id,
+                    'defending_type_id' => $pokemonTypeDB->id,
                     'multiplier' => 0
                 ]);
             }
 
             foreach ($damageRelation['no_damage_to'] as $pokemonTypeApi)
             {
+                $damage = Type::where('name', $pokemonTypeApi['name'])->firstORFail();
                 DamageRelation::firstOrCreate([
-                    'attacking_type_id' => $damage->id,
-                    'defending_type_id' => $pokemonTypeDB->id,
+                    'attacking_type_id' => $pokemonTypeDB->id,
+                    'defending_type_id' => $damage->id,
                     'multiplier' => 0
                 ]);
             }
