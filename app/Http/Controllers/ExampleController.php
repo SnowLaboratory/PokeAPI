@@ -24,7 +24,7 @@ class ExampleController extends Controller
            "limit" => $pokemonPerPage,
            "offset" => ($requestedPage - 1) * $pokemonPerPage
         ]);
-        $results = Http::get($url)->json() ?? [];
+        $results = fetchJson($url);
         $results["maxPage"] = ceil($results["count"] / $pokemonPerPage);
         $results["prevPage"] = url()->current() . "?" . http_build_query([
             "page" => ($requestedPage > 1 ? $requestedPage - 1 : 1)
