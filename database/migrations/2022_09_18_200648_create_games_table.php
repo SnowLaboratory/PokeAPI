@@ -21,8 +21,8 @@ return new class extends Migration
         });
 
         Schema::create('game_pokemon', function (Blueprint $table) {
-            $table->foreignIdFor(Pokemon::class);
-            $table->foreignIdFor(Game::class);
+            $table->foreignIdFor(Pokemon::class)->references('id')->on('pokemon')->onDelete('cascade');
+            $table->foreignIdFor(Game::class)->onDelete('cascade');
         });
     }
 
