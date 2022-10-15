@@ -1,0 +1,25 @@
+[Type]
+- id:
+  type: Number
+  primary: true
+
+- name:
+  type: String
+  unique: true
+
+[Relations]
+- damage_relations:
+  type: ManyToMany
+  model: Type
+  pivot: damage_relations
+  pivot_model: DamageRelation
+  pivot_field: multiplier
+
+- games:
+  type: Polymorphic ManyToMany
+  model: Game
+  pivot: HasGames
+  fields:
+    model_type: Pokemon, Type
+    model_id: Number
+    game_id: Number

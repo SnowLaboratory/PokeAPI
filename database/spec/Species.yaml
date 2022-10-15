@@ -1,0 +1,90 @@
+[Species]
+
+- id:
+  type: Number
+  primary: true
+
+- name:
+  type: String
+  unique: true
+
+- base_happiness:
+  type: Number
+
+- capture_rate:
+  type: Number
+
+- forms_switchable:
+  type: Boolean
+
+- gender_rate:
+  type: Number
+
+- has_gender_differences:
+  type: Boolean
+
+- hatch_counter:
+  type: Number
+
+- is_baby:
+  type: false
+
+- is_legendary:
+  type: false
+
+- is_mythical:
+  type: false
+
+- order:
+  type: Number
+
+
+[relations]
+- color:
+  type: BelongsTo
+
+- egg_groups:
+  type: HasMany
+
+- evolution_chain:
+  type: BelongsTo
+
+- evolves_from_species:
+  type: BelongsTo
+
+- flavor_text_entries:
+  type: HasMany
+
+- form_descriptions:
+  type: HasMany
+
+- genera:
+  type: HasMany
+
+- generation:
+  type: BelongsTo
+
+- growth_rate:
+  type: BelongsTo
+
+- habitat:
+  type: BelongsTo
+
+- names:
+  type: HasMany
+
+- pal_park_encounters:
+  type: HasMany
+
+- pokedex_numbers:
+  type: HasMany
+
+- shape:
+  type: BelongsTo
+
+- pokemon:
+  type: ManyToMany
+  model: Pokemon
+  pivot: varieties
+  pivot_fields:
+    is_default: Boolean

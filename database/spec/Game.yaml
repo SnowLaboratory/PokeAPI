@@ -1,0 +1,16 @@
+[Game]
+- id:
+  type: Number
+  primary: true
+
+- name:
+  type: String
+  unique: true
+
+[relationships]
+- names:
+  type: HasMany
+
+- release:
+  type: BelongsTo
+  model: Release

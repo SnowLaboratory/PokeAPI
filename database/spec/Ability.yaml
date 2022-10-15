@@ -1,0 +1,34 @@
+[Ability]
+- id:
+  type: Number
+  primary: true
+
+- name:
+  type: String
+  unique: true
+
+- is_main_series:
+  type: Boolean
+
+[Relations]
+- effect_changes:
+  type: HasMany
+
+- effect_entries:
+  type: HasMany
+
+- flavor_text_entries:
+  type: HasMany
+
+- generation:
+  type: BelongsTo
+  model: Generation
+
+- names:
+  type: HasMany
+
+- pokemon:
+  type: ManyToMany
+  model: Pokemon
+  pivot: ability_pokemon
+
