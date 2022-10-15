@@ -1,0 +1,34 @@
+[Generation]
+- id:
+  type: Number
+  primary: true
+
+- name:
+  type: String
+  unique: true
+
+
+[Relations]
+- abilities:
+  type: HasMany
+
+- main_region:
+  type: BelongsTo
+
+- moves:
+  type: HasMany
+
+- names:
+  type: HasMany
+
+- species:
+  type: HasMany
+  model: Species
+
+- types:
+  type: HasMany
+  model: Type
+
+- release:
+  type: HasMany
+  model: Release

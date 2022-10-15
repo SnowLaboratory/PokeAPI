@@ -1,0 +1,31 @@
+[Release]
+- id:
+  type: Number
+  primary: true
+
+- name:
+  type: String
+  unique: true
+
+- order:
+  type: Number
+
+[relationships]
+- generation:
+  type: BelongsTo
+  model: Generation
+
+- move_learn_methods:
+  type: HasMany
+
+- pokedexes:
+  type: HasMany
+  model: Pokedex
+
+- regions:
+  type: HasMany
+  model: Region
+
+- games:
+  type: HasMany
+  model: Game

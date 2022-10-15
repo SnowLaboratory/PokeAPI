@@ -1,0 +1,67 @@
+[Pokemon]
+- id:
+  type: Number
+  primary: true
+
+- name:
+  type: String
+  unique: true
+
+- base_experience:
+  type: Number
+
+- height:
+  type: Number
+
+- is_default:
+  type: Boolean
+
+- order:
+  type: Number
+
+- weight:
+  type: Number
+
+[Relations]
+- abilities:
+  type: ManyToMany
+  model: Ability
+  pivot: ability_pokemon
+
+- forms:
+  type: HasMany
+
+- games:
+  type: Polymorphic ManyToMany
+  model: Game
+  pivot: HasGames
+  fields:
+    model_type: Pokemon, Type
+    model_id: Number
+    game_id: Number
+
+- held_items:
+  type: HasMany
+
+- encounters:
+  type: HasMany
+
+- moves:
+  type: HasMany
+
+- past_types:
+  type: HasMany
+
+- species:
+  type: BelongsTo
+  model: Species
+
+- sprites:
+  type: HasMany
+
+- stats:
+  type: HasMany
+
+- types:
+  type: HasMany
+  model: Type
