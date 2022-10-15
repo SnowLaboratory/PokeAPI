@@ -2,49 +2,49 @@
 
 namespace Database\Seeders;
 
-use App\Jobs\ImportType;
+use App\Jobs\ImportGeneration;
 use App\Models\Pokemon;
-use App\Models\Type;
+use App\Models\Generation;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Http;
 use SmeltLabs\PocketMonsters\EndpointBuilder;
 
-class TypeSeeder extends Seeder
+class GenerationSeeder extends Seeder
 {
     /**
      * Run the database seeds.
      *
      * @return void
      */
-
     public function run()
     {
         // 1. Truncate the table so you can run seeder by itself
-        Type::truncate();
+        Generation::truncate();
 
-        // 2. Fetch all the types from the API
+        // 2. Fetch all the generations from the API
         $api = new EndpointBuilder();
-        $typesJson = fetchJson($api->getAllTypes());
+        $generationJson = fetchJson($api->getAllGenerations());
 
-        // 3. Loop over a list of urls associated to each type
-        $urls = collect($typesJson['results'])->pluck('url');
-        foreach ($urls as $typeUrl) {
+        // 3. Loop over a list of urls associated to each generation
+        $urls = collect($generationJson['results'])->pluck('url');
+        foreach ($urls as $generationUrl) {
 
-            // 4. Fetch all the data for a specific type
-            $typeJson = fetchJson($typeUrl);
+            // 4. Fetch all the data for a specific generation
+            $generationJson = fetchJson($generationUrl);
 
             // 5. Assign variables for easy access.
-            $typeName = $typeJson['name'];
-            $pokemonNames = collect($typeJson['pokemon'])->pluck('pokemon.name');
+            $generationName = $generationJson['name'];
+            $pokemonNames = collect($generationJson['pokemon_species'])->pluck('name');
 
             // 6. Loop over every pokemon name
             foreach ($pokemonNames as $pokemonName) {
                 // 7. Find pokemon by unique pokemon name.
+
                 $pokemonDB = Pokemon::where('name', $pokemonName)->firstOrFail();
 
                 // 8. Dispatch ImportType job
-                ImportType::dispatch($typeName, $pokemonDB);
+                ImportGeneration::dispatch($generationName, $pokemonDB);
             }
         }
     }
