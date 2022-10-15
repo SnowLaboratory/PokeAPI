@@ -1,0 +1,26 @@
+# /pokemon/{name}
+species (where: species.name) {
+    capture_rate, is_legendary, is_mythical, name,
+    pokemon [
+        name, image, height,weight, is_default
+        stats [name, base_stat],
+        sprites [image],
+        growth_rate: {name},
+        pokedex {
+            meta [name, number]
+        }
+        types [name],
+        ability {name},
+        evolution_chain {
+            details {
+                meta [name, value],
+                trigger {name}
+            }
+        },
+        generation {
+            name,
+            main_region {name}
+        },
+        habitat {name}
+    ]
+}

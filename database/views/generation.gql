@@ -1,0 +1,14 @@
+# /generation/{name}
+generation (where: name) {
+    species [
+        capture_rate, is_legendary, is_mythical, name,
+        pokemon (where: is_default) {
+            name, is_default
+            stats [name, base_stat],
+            sprites [image],
+            pokedex {
+                meta [name, number]
+            }
+        }
+    ]
+}
