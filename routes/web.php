@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ExampleController;
 use App\Http\Controllers\GenerationController;
+use App\Http\Resources\SpeciesDetailResource;
 use App\Http\Resources\SpeciesResource;
 use App\Models\Species;
 use Illuminate\Support\Facades\Route;
@@ -33,7 +34,7 @@ Route::prefix('/gen')->group(function (){
 Route::get('/pokemon/{species:name}', function (Species $species) {
     // Go to the species.blade.php view or return json
     // Limit data to what is provided by the species resource
-    return page('species', SpeciesResource::make($species));
+    return page('species', SpeciesDetailResource::make($species));
 });
 
 
