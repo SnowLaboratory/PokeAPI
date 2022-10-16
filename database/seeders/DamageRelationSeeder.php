@@ -29,8 +29,7 @@ class DamageRelationSeeder extends Seeder
 
         $api = new EndpointBuilder();
 
-        foreach (Type::all() as $pokemonTypeDB)
-        {
+        $this->progressMap(Type::all(), function($pokemonTypeDB) use($api) {
             $url = $api->getTypeByName($pokemonTypeDB->name);
 
             $damageRelation = fetchJson($url)['damage_relations'];
@@ -102,12 +101,6 @@ class DamageRelationSeeder extends Seeder
                     'multiplier' => 0
                 ]);
             }
-
-
-
-//            dd($damageRelation['double_damage_from']);
-        }
-
-
+        });
     }
 }

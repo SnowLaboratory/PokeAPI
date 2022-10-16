@@ -38,7 +38,8 @@ class TypeSeeder extends Seeder
 
         // 3. Loop over a list of urls associated to each type
         $urls = collect($typesJson['results'])->pluck('url');
-        foreach ($urls as $typeUrl) {
+
+        $this->progressMap($urls, function($typeUrl) {
 
             // 4. Fetch all the data for a specific type
             $typeJson = fetchJson($typeUrl);
@@ -55,6 +56,6 @@ class TypeSeeder extends Seeder
                 // 8. Dispatch ImportType job
                 ImportType::dispatch($typeName, $pokemonDB);
             }
-        }
+        });
     }
 }

@@ -34,8 +34,8 @@ class GameSeeder extends Seeder
 
         // 3. Loop over a list of urls associated to each pokemon
         $urls = collect($infoJson['results'])->pluck('url');
-        foreach ($urls as $pokemonUrl) {
 
+        $this->progressMap($urls, function($pokemonUrl) {
             // 4. Fetch all the data for a specific pokemon
             $pokemonJson = fetchJson($pokemonUrl);
 
@@ -51,6 +51,6 @@ class GameSeeder extends Seeder
                 // 8. Dispatch ImportType job
                 ImportGame::dispatch($pokemonFeaturedIn, $pokemonDB);
             }
-        }
+        });
     }
 }
