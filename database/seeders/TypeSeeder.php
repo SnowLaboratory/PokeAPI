@@ -9,9 +9,14 @@ use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Http;
 use SmeltLabs\PocketMonsters\EndpointBuilder;
+use Database\Traits\CanTruncateTables;
+use Database\Traits\CanDisplayProgress;
 
 class TypeSeeder extends Seeder
 {
+
+    use CanTruncateTables, CanDisplayProgress;
+
     /**
      * Run the database seeds.
      *
@@ -21,7 +26,11 @@ class TypeSeeder extends Seeder
     public function run()
     {
         // 1. Truncate the table so you can run seeder by itself
-        Type::truncate();
+        $this->truncate([
+            'types',
+            'pokemon_type',
+            'damage_relation'
+        ]);
 
         // 2. Fetch all the types from the API
         $api = new EndpointBuilder();

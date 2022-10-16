@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\DamageRelation;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -21,6 +22,10 @@ class DatabaseSeeder extends Seeder
         $this->truncate([
             PokemonSeeder::class,
             SpeciesSeeder::class,
+            TypeSeeder::class,
+            DamageRelationSeeder::class,
+            GameSeeder::class,
+            GenerationSeeder::class,
         ]);
     }
 }

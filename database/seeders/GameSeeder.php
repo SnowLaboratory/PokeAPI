@@ -9,9 +9,12 @@ use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Http;
 use SmeltLabs\PocketMonsters\EndpointBuilder;
+use Database\Traits\CanTruncateTables;
+use Database\Traits\CanDisplayProgress;
 
 class GameSeeder extends Seeder
 {
+    use CanTruncateTables, CanDisplayProgress;
     /**
      * Run the database seeds.
      *
@@ -20,7 +23,10 @@ class GameSeeder extends Seeder
     public function run()
     {
         // 1. Truncate the table so you can run seeder by itself
-        Game::truncate();
+        $this->truncate([
+            'games',
+            'game_pokemon'
+        ]);
 
         // 2. Fetch all the pokemon from the API
         $api = new EndpointBuilder();
