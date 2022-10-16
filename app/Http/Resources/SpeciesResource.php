@@ -20,7 +20,7 @@ class SpeciesResource extends JsonResource
             'is_legendary' => (boolean) $this->is_legendary,
             'is_mythical' => (boolean) $this->is_mythical,
             'pokemon' => PokemonStubResource::make($this->pokemon()->where('is_default', true)->first()),
-            'variations' => PokemonStubResource::make($this->pokemon()->where('is_default', false)->get())
+            'variations' => PokemonStubResource::collection($this->pokemon()->where('is_default', false)->get())
         ];
     }
 }
