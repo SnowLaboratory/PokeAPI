@@ -9,9 +9,13 @@ use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Http;
 use SmeltLabs\PocketMonsters\EndpointBuilder;
+use Database\Traits\CanTruncateTables;
+use Database\Traits\CanDisplayProgress;
 
 class GenerationSeeder extends Seeder
 {
+    use CanTruncateTables, CanDisplayProgress;
+
     /**
      * Run the database seeds.
      *
@@ -20,7 +24,10 @@ class GenerationSeeder extends Seeder
     public function run()
     {
         // 1. Truncate the table so you can run seeder by itself
-        Generation::truncate();
+        $this->truncate([
+            'generations',
+            'generation_pokemon'
+        ]);
 
         // 2. Fetch all the generations from the API
         $api = new EndpointBuilder();
@@ -38,14 +45,14 @@ class GenerationSeeder extends Seeder
             $pokemonNames = collect($generationJson['pokemon_species'])->pluck('name');
 
             // 6. Loop over every pokemon name
-            foreach ($pokemonNames as $pokemonName) {
-                // 7. Find pokemon by unique pokemon name.
+            // foreach ($pokemonNames as $pokemonName) {
+            //     // 7. Find pokemon by unique pokemon name.
 
-                $pokemonDB = Pokemon::where('name', $pokemonName)->firstOrFail();
+            //     $pokemonDB = Pokemon::where('name', $pokemonName)->firstOrFail();
 
-                // 8. Dispatch ImportType job
-                ImportGeneration::dispatch($generationName, $pokemonDB);
-            }
+            //     // 8. Dispatch ImportType job
+            //     ImportGeneration::dispatch($generationName, $pokemonDB);
+            // }
         }
     }
 }
