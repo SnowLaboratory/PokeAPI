@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 
@@ -11,3 +12,9 @@ function fetchJson($url)
     return $json;
 }
 
+/**
+ * Return a view or json with limited data specified by a resource.
+ */
+function page($view, JsonResource $jsonResource) {
+    return response()->resource($view, $jsonResource);
+}
