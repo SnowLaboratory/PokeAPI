@@ -28,7 +28,7 @@ class AppServiceProvider extends ServiceProvider
         Response::macro('resource', function ($view, JsonResource $resource) {
             return request()->expectsJson() || request()->boolean('json')
                 ? $resource
-                : view($view, $resource->resolve());
+                : view($view, (array)json_decode($resource->toJson()));
         });
     }
 }

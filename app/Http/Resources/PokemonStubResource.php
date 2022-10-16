@@ -14,6 +14,7 @@ class PokemonStubResource extends JsonResource
      */
     public function toArray($request)
     {
+        // dd($this->name);
         return [
             "name" => $this->name,
         ];
