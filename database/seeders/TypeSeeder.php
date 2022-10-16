@@ -9,9 +9,14 @@ use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Http;
 use SmeltLabs\PocketMonsters\EndpointBuilder;
+use Database\Traits\CanTruncateTables;
+use Database\Traits\CanDisplayProgress;
 
 class TypeSeeder extends Seeder
 {
+
+    use CanTruncateTables, CanDisplayProgress;
+
     /**
      * Run the database seeds.
      *
@@ -21,7 +26,11 @@ class TypeSeeder extends Seeder
     public function run()
     {
         // 1. Truncate the table so you can run seeder by itself
-        Type::truncate();
+        $this->truncate([
+            'types',
+            'pokemon_type',
+            'damage_relation'
+        ]);
 
         // 2. Fetch all the types from the API
         $api = new EndpointBuilder();
@@ -29,7 +38,8 @@ class TypeSeeder extends Seeder
 
         // 3. Loop over a list of urls associated to each type
         $urls = collect($typesJson['results'])->pluck('url');
-        foreach ($urls as $typeUrl) {
+
+        $this->progressMap($urls, function($typeUrl) {
 
             // 4. Fetch all the data for a specific type
             $typeJson = fetchJson($typeUrl);
@@ -46,6 +56,6 @@ class TypeSeeder extends Seeder
                 // 8. Dispatch ImportType job
                 ImportType::dispatch($typeName, $pokemonDB);
             }
-        }
+        });
     }
 }

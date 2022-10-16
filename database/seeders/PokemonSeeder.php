@@ -23,7 +23,7 @@ class PokemonSeeder extends Seeder
      *
      * @return void
      */
-    public function run($params=null)
+    public function run()
     {
         $this->truncate([
             'ability_pokemon',

@@ -8,9 +8,13 @@ use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Http;
 use SmeltLabs\PocketMonsters\EndpointBuilder;
+use Database\Traits\CanTruncateTables;
+use Database\Traits\CanDisplayProgress;
 
 class DamageRelationSeeder extends Seeder
 {
+    use CanTruncateTables, CanDisplayProgress;
+
     /**
      * Run the database seeds.
      *
@@ -18,12 +22,14 @@ class DamageRelationSeeder extends Seeder
      */
     public function run()
     {
-        DamageRelation::truncate();
+        // 1. Truncate the table so you can run seeder by itself
+        $this->truncate([
+            'damage_relation'
+        ]);
 
         $api = new EndpointBuilder();
 
-        foreach (Type::all() as $pokemonTypeDB)
-        {
+        $this->progressMap(Type::all(), function($pokemonTypeDB) use($api) {
             $url = $api->getTypeByName($pokemonTypeDB->name);
 
             $damageRelation = fetchJson($url)['damage_relations'];
@@ -95,12 +101,6 @@ class DamageRelationSeeder extends Seeder
                     'multiplier' => 0
                 ]);
             }
-
-
-
-//            dd($damageRelation['double_damage_from']);
-        }
-
-
+        });
     }
 }

@@ -9,9 +9,12 @@ use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Http;
 use SmeltLabs\PocketMonsters\EndpointBuilder;
+use Database\Traits\CanTruncateTables;
+use Database\Traits\CanDisplayProgress;
 
 class GameSeeder extends Seeder
 {
+    use CanTruncateTables, CanDisplayProgress;
     /**
      * Run the database seeds.
      *
@@ -20,7 +23,10 @@ class GameSeeder extends Seeder
     public function run()
     {
         // 1. Truncate the table so you can run seeder by itself
-        Game::truncate();
+        $this->truncate([
+            'games',
+            'game_pokemon'
+        ]);
 
         // 2. Fetch all the pokemon from the API
         $api = new EndpointBuilder();
@@ -28,8 +34,8 @@ class GameSeeder extends Seeder
 
         // 3. Loop over a list of urls associated to each pokemon
         $urls = collect($infoJson['results'])->pluck('url');
-        foreach ($urls as $pokemonUrl) {
 
+        $this->progressMap($urls, function($pokemonUrl) {
             // 4. Fetch all the data for a specific pokemon
             $pokemonJson = fetchJson($pokemonUrl);
 
@@ -45,6 +51,6 @@ class GameSeeder extends Seeder
                 // 8. Dispatch ImportType job
                 ImportGame::dispatch($pokemonFeaturedIn, $pokemonDB);
             }
-        }
+        });
     }
 }
