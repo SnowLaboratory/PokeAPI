@@ -10,3 +10,4 @@ function fetchJson($url)
     Cache::store('redis')->put($url, $json);
     return $json;
 }
+

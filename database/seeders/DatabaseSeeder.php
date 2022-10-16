@@ -1,11 +1,16 @@
 <?php
 
 namespace Database\Seeders;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
 {
+
+    public function truncate(array $seeders) {
+        $this->call($seeders, false, ['truncate' => true]);
+    }
+
     /**
      * Seed the application's database.
      *
@@ -13,8 +18,9 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-       $this->call([
-           PokemonSeeder::class,
-       ]);
+        $this->truncate([
+            PokemonSeeder::class,
+            SpeciesSeeder::class,
+        ]);
     }
 }
