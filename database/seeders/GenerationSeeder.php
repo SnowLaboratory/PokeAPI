@@ -35,7 +35,7 @@ class GenerationSeeder extends Seeder
 
         // 3. Loop over a list of urls associated to each generation
         $urls = collect($generationJson['results'])->pluck('url');
-        foreach ($urls as $generationUrl) {
+        $this->progressMap($urls, function($generationUrl) {
 
             // 4. Fetch all the data for a specific generation
             $generationJson = fetchJson($generationUrl);
@@ -53,6 +53,6 @@ class GenerationSeeder extends Seeder
             //     // 8. Dispatch ImportType job
             //     ImportGeneration::dispatch($generationName, $pokemonDB);
             // }
-        }
+        });
     }
 }
