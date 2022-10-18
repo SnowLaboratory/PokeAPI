@@ -29,7 +29,6 @@ class PokemonSeeder extends Seeder
             'ability_pokemon',
             'game_pokemon',
             'gender_pokemon',
-            'habitat_pokemon',
             'pokemon_type',
             'pokemon_weakness',
             'pokemon',

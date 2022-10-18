@@ -53,8 +53,11 @@ class TypeSeeder extends Seeder
                 // 7. Find pokemon by unique pokemon name.
                 $pokemonDB = Pokemon::where('name', $pokemonName)->firstOrFail();
 
-                // 8. Dispatch ImportType job
-                ImportType::dispatch($typeName, $pokemonDB);
+                // 8. Save Relation
+                    $type = Type::firstOrCreate([
+                        "name" => $typeName,
+                    ]);
+                    $type->pokemon()->save($pokemonDB);
             }
         });
     }
