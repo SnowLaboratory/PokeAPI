@@ -58,7 +58,7 @@ class SpeciesSeeder extends Seeder
             // 7. Loop over every pokemon name
             foreach ($pokemonNames as $pokemonName) {
                 // 8. Find pokemon by unique pokemon name.
-                $pokemonDB = Pokemon::where('name', $pokemonName)->firstOrFail();
+                $pokemonDB = Pokemon::firstWhere('name', $pokemonName);
 
                 // 9. Save pokemon/species relationship
                 $species->pokemon()->save($pokemonDB);
