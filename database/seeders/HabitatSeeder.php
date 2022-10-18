@@ -8,11 +8,11 @@ use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use SmeltLabs\PocketMonsters\EndpointBuilder;
 use App\Models\Habitat;
-use App\models\Species;
+use App\Models\Species;
 
 class HabitatSeeder extends Seeder
 {
-    use cantruncateTables;
+    use CanTruncateTables;
     use CanDisplayProgress;
 
     public function run()
