@@ -2,7 +2,6 @@
 
 namespace Database\Seeders;
 
-use App\Models\DamageRelation;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -26,6 +25,7 @@ class DatabaseSeeder extends Seeder
             DamageRelationSeeder::class,
             GameSeeder::class,
             GenerationSeeder::class,
+            HabitatSeeder::class,
         ]);
     }
 }

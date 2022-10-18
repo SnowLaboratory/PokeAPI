@@ -20,4 +20,8 @@ class Species extends Model
     public function generation () : BelongsTo {
         return $this->belongsTo(Generation::class);
     }
+
+    public function habitat () : BelongsTo {
+        return $this->belongsTo(habitat::class);
+    }
 }

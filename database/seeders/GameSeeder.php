@@ -41,6 +41,7 @@ class GameSeeder extends Seeder
 
             // 5. Assign variables for easy access.
             $pokemonName = $pokemonJson['name'];
+
             $gameNames = collect($pokemonJson['game_indices'])->pluck('version.name');
 
             // 6. Loop over every pokemon name
@@ -48,8 +49,11 @@ class GameSeeder extends Seeder
                 // 7. Find pokemon by unique pokemon name.
                 $pokemonDB = Pokemon::where('name', $pokemonName)->firstOrFail();
 
-                // 8. Dispatch ImportType job
-                ImportGame::dispatch($pokemonFeaturedIn, $pokemonDB);
+                // 8. Save Relation
+                $game = Game::firstOrCreate([
+                    'name' => $pokemonFeaturedIn
+                ]);
+                $game->pokemon()->save($pokemonDB);
             }
         });
     }
