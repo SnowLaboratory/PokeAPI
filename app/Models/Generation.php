@@ -10,5 +10,7 @@ class Generation extends Model
 {
     use HasFactory, HasPokemon;
 
+    public $guarded = [];
+
     public $timestamps = false;
 }
