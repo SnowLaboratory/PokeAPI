@@ -4,14 +4,13 @@ namespace App\Models;
 
 use App\Traits\HasCategories;
 use App\Traits\HasImages;
-use App\Traits\HasPokedex;
 use App\Traits\HasStats;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Pokemon extends Model
 {
-    use HasFactory, HasStats, HasPokedex, HasCategories, HasImages;
+    use HasFactory, HasStats, HasCategories, HasImages;
 
     protected $guarded = [];
 

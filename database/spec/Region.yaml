@@ -1,0 +1,17 @@
+[Region]
+- id:
+  type: Number
+  primary: true
+
+- name:
+  type: String
+  unique: true
+
+[Relation]
+- pokedexes:
+  type: HasMany
+  model: Pokdex
+
+- releases:
+  type: HasMany
+  model: Release

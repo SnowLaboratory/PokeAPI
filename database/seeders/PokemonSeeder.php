@@ -2,27 +2,17 @@
 
 namespace Database\Seeders;
 
-use App\Jobs\ImportPokemon;
 use App\Models\Pokemon;
-use Database\Traits\CanAcceptParameters;
 use Database\Traits\CanDisplayProgress;
 use Database\Traits\CanTruncateTables;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\DB;
 use SmeltLabs\PocketMonsters\EndpointBuilder;
-use Illuminate\Support\Facades\Http;
-use Symfony\Component\Console\Input\InputArgument;
 
 class PokemonSeeder extends Seeder
 {
 
     use CanTruncateTables, CanDisplayProgress;
 
-    /**
-     * Run the database seeds.
-     *
-     * @return void
-     */
     public function run()
     {
         $this->truncate([
