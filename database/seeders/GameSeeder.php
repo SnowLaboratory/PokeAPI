@@ -2,12 +2,9 @@
 
 namespace Database\Seeders;
 
-use App\Jobs\ImportGame;
 use App\Models\Game;
 use App\Models\Pokemon;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\Http;
 use SmeltLabs\PocketMonsters\EndpointBuilder;
 use Database\Traits\CanTruncateTables;
 use Database\Traits\CanDisplayProgress;

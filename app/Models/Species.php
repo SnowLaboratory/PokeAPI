@@ -5,7 +5,9 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use App\Models\Pivot\PokedexEntry;
 
 class Species extends Model
 {
@@ -23,5 +25,9 @@ class Species extends Model
 
     public function habitat () : BelongsTo {
         return $this->belongsTo(habitat::class);
+    }
+
+    public function pokedex () : BelongsToMany {
+        return $this->belongsToMany(Pokedex::class)->using(PokedexEntry::class)->withPivot('entry_number');
     }
 }
