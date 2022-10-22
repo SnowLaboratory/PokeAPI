@@ -23,7 +23,12 @@ class PokedexSeeder extends Seeder
 
         // 2. Fetch all the pokedexes from the API
         $api = new EndpointBuilder();
-        $infoJson = fetchJson($api->getAllPokedexs());
+
+        $url = $api->getAllPokedexs() . "?" . http_build_query([
+            "limit" => 10000,
+        ]);
+
+        $infoJson = fetchJson($url);
 
         // 3. Loop over a list of urls associated to each url
         $urls = collect($infoJson['results'])->pluck('url');
@@ -59,6 +64,7 @@ class PokedexSeeder extends Seeder
 
             // 10. Assign region
             // $region = Region::firstWhere('name', optional($pokedexJson['region'])['name']);
+            // $pokedex->region()
 
         });
     }

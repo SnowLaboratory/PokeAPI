@@ -16,10 +16,6 @@
   type: BelongsTo
   model: Region
 
-- Generation:
-  type: BelongsTo
-  model: Generation
-
 - species:
   type: ManyToMany
   model: Species

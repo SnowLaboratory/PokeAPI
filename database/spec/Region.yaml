@@ -12,6 +12,10 @@
   type: HasMany
   model: Pokdex
 
+- Generation:
+type: BelongsTo
+model: Generation
+
 - releases:
   type: HasMany
   model: Release
