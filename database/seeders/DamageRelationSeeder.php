@@ -13,16 +13,6 @@ class DamageRelationSeeder extends Seeder
 {
     use CanTruncateTables, CanDisplayProgress;
 
-
-    public function syncUsing($damageRelationsJson, $damageRelationKey, $multiplier) {
-        $typeNames = collect($damageRelationsJson['double_damage_from'])->pluck('name');
-        $relatedTypeIds = Type::whereIn('name', $typeNames)->pluck('id');
-
-        $dataToSync = $relatedTypeIds->keyBy(null)->map(fn($x) => [
-                'multiplier' => 2
-        ]);
-    }
-
     /**
      * Run the database seeds.
      *
