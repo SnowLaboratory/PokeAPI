@@ -1,0 +1,23 @@
+[EvolutionChain]
+- id:
+  type: Number
+  primary: true
+
+
+  [Relations]
+- evolution_details:
+  type: HasMany
+  model: EvolutionDetail
+
+- evolves_to:
+  type: HasMany
+  model: EvolutionChain
+
+- species:
+  type: BelongsTo
+  model: Species
+
+- baby_trigger_item:
+  type: BelongsTo
+
+

@@ -8,7 +8,6 @@ use Illuminate\Database\Seeder;
 use SmeltLabs\PocketMonsters\EndpointBuilder;
 use App\Models\Pokedex;
 use App\Models\Species;
-use App\Models\Region;
 
 class PokedexSeeder extends Seeder
 {
