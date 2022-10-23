@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Traits\HasPokemon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Generation extends Model
@@ -18,5 +19,9 @@ class Generation extends Model
 
     public function region () : HasOne {
         return $this->hasOne(Region::class);
+    }
+
+    public function species () : HasMany {
+        return $this->hasMany(Species::class);
     }
 }

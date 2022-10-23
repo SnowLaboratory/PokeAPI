@@ -36,20 +36,13 @@ class AbilitySeeder extends Seeder
             // 5. Assign variables for easy access.
             $abilityName = $abilityJson['name'];
 
+            $ability = Ability::firstOrCreate([
+                'name' => $abilityName,
+            ]);
+
             $pokemonNames = collect($abilityJson['pokemon'])->pluck('pokemon.name');
-
-            // 6. Loop over every pokemon name
-            foreach ($pokemonNames as $pokemon) {
-
-                // 7. Find pokemon by unique pokemon name.
-                $pokemonDB = Pokemon::firstWhere('name', $pokemon);
-
-                // 8. Save Relation
-                $ability = Ability::firstOrCreate([
-                    'name' => $abilityName,
-                ]);
-                $ability->pokemon()->save($pokemonDB);
-            }
+            $pokemon = Pokemon::whereIn('name', $pokemonNames)->get();
+            $ability->pokemon()->saveMany($pokemon);
         });
     }
 }

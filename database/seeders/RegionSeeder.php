@@ -17,7 +17,7 @@ class RegionSeeder extends Seeder
     public function run()
     {
         // 1. Truncate the table so you can run seeder by itself
-        $this->truncate([
+        $this->forceTruncate([
             'regions',
             // 'region_release',
         ]);
@@ -47,7 +47,7 @@ class RegionSeeder extends Seeder
             $pokedexNames = collect($regionJson['pokedexes'])->pluck('name');
 
             // 8. Get Pokedex ids where row has a name inside the pokedexNames variable
-            $pokedexes = Pokedex::whereIn('name', $pokedexNames)->get();
+            $pokedexes = Pokedex::whereIn('name', $pokedexNames);
 
             // 9. Wipes current pokedex relationship and attaches pokedexes with matching ids
             $region->pokedexes()->saveMany($pokedexes);

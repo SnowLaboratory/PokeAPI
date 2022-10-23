@@ -27,78 +27,19 @@ class DamageRelationSeeder extends Seeder
 
         $api = new EndpointBuilder();
 
-        $this->progressMap(Type::all(), function($pokemonTypeDB) use($api) {
-            $url = $api->getTypeByName($pokemonTypeDB->name);
+        $urls = Type::all()->pluck('name')->map([$api, 'getTypeByName']);
 
-            $damageRelation = fetchJson($url)['damage_relations'];
+        $this->progressMap($urls, function($typeUrl)  {
 
-            foreach ($damageRelation['double_damage_from'] as $pokemonTypeApi)
-            {
-                $damage = Type::firstWhere('name', $pokemonTypeApi['name']);
+            $typeJson = fetchJson($typeUrl);
+            $typeDb = Type::firstWhere('name', $typeJson['name']);
 
-                DamageRelation::firstOrCreate([
-                    'attacking_type_id' => $damage->id,
-                    'defending_type_id' => $pokemonTypeDB->id,
-                    'multiplier' => 2
-                ]);
-
-            }
-
-            foreach ($damageRelation['double_damage_to'] as $pokemonTypeApi)
-            {
-
-                $damage = Type::firstWhere('name', $pokemonTypeApi['name']);
-
-                DamageRelation::firstOrCreate([
-                    'attacking_type_id' => $pokemonTypeDB->id,
-                    'defending_type_id' => $damage->id,
-                    'multiplier' => 2
-                ]);
-
-            }
-
-            foreach ($damageRelation['half_damage_from'] as $pokemonTypeApi)
-            {
-                $damage = Type::firstWhere('name', $pokemonTypeApi['name']);
-
-                DamageRelation::firstOrCreate([
-                    'attacking_type_id' => $damage->id,
-                    'defending_type_id' => $pokemonTypeDB->id,
-                    'multiplier' => 0.5
-                ]);
-
-            }
-
-            foreach ($damageRelation['half_damage_to'] as $pokemonTypeApi)
-            {
-                $damage = Type::firstWhere('name', $pokemonTypeApi['name']);
-
-                DamageRelation::firstOrCreate([
-                    'attacking_type_id' => $pokemonTypeDB->id,
-                    'defending_type_id' => $damage->id,
-                    'multiplier' => 0.5
-                ]);
-            }
-
-            foreach ($damageRelation['no_damage_from'] as $pokemonTypeApi)
-            {
-                $damage = Type::firstWhere('name', $pokemonTypeApi['name']);
-                DamageRelation::firstOrCreate([
-                    'attacking_type_id' => $damage->id,
-                    'defending_type_id' => $pokemonTypeDB->id,
-                    'multiplier' => 0
-                ]);
-            }
-
-            foreach ($damageRelation['no_damage_to'] as $pokemonTypeApi)
-            {
-                $damage = Type::firstWhere('name', $pokemonTypeApi['name']);
-                DamageRelation::firstOrCreate([
-                    'attacking_type_id' => $pokemonTypeDB->id,
-                    'defending_type_id' => $damage->id,
-                    'multiplier' => 0
-                ]);
-            }
+            $typeDb->attachDefendingDamage('double_damage_from', 2, $typeJson);
+            $typeDb->attachAttackingDamage('double_damage_to', 2, $typeJson);
+            $typeDb->attachDefendingDamage('half_damage_from', 0.5, $typeJson);
+            $typeDb->attachAttackingDamage('half_damage_to', 0.5, $typeJson);
+            $typeDb->attachDefendingDamage('no_damage_from', 0, $typeJson);
+            $typeDb->attachAttackingDamage('no_damage_to', 0, $typeJson);
         });
     }
 }
