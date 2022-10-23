@@ -55,14 +55,11 @@ class SpeciesSeeder extends Seeder
                 'is_mythical' => $speciesJson['is_mythical']
             ]);
 
-            // 7. Loop over every pokemon name
-            foreach ($pokemonNames as $pokemonName) {
-                // 8. Find pokemon by unique pokemon name.
-                $pokemonDB = Pokemon::firstWhere('name', $pokemonName);
+            // 7. Find all pokemon with matching names.
+            $pokemon = Pokemon::whereIn('name', $pokemonNames);
 
-                // 9. Save pokemon/species relationship
-                $species->pokemon()->save($pokemonDB);
-            }
+            // 8. Associate those pokemon with the current species.
+            $species->pokemon()->saveMany($pokemon);
 
         });
     }

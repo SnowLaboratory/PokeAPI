@@ -37,23 +37,19 @@ class GenerationSeeder extends Seeder
             // 4. Fetch all the data for a specific generation
             $generationJson = fetchJson($generationUrl);
 
-            // 5. Assign variables for easy access.
-            $generationName = $generationJson['name'];
-            $speciesNames = collect($generationJson['pokemon_species'])->pluck('name');
-
+            // 5. Find or create a generation model.
             $generation = Generation::firstOrCreate([
-                "name" => $generationName,
+                "name" => $generationJson['name'],
             ]);
 
-            // 6. Loop over every pokemon name
-            foreach ($speciesNames as $speciesName) {
-                // 7. Find pokemon by unique pokemon name.
+            // 6. Get a list of all the species names in a generation.
+            $speciesNames = collect($generationJson['pokemon_species'])->pluck('name');
 
-                $speciesDB = Species::firstWhere('name', $speciesName);
+            // 7. Get all existing species whose name matches.
+            $species = Species::whereIn('name', $speciesNames);
 
-                // 8. Save Relation
-                $speciesDB->generation()->associate($generation)->save();
-            }
+            // 8. Associate many species models to the generation model.
+            $generation->species()->saveMany($species);
         });
     }
 }

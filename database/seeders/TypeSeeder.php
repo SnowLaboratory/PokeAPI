@@ -44,21 +44,19 @@ class TypeSeeder extends Seeder
             // 4. Fetch all the data for a specific type
             $typeJson = fetchJson($typeUrl);
 
-            // 5. Assign variables for easy access.
-            $typeName = $typeJson['name'];
+            // 5. Find or create a type model.
+            $type = Type::firstOrCreate([
+                "name" => $typeJson['name'],
+            ]);
+
+            // 6. Get a list of all the pokemon names for a type.
             $pokemonNames = collect($typeJson['pokemon'])->pluck('pokemon.name');
 
-            // 6. Loop over every pokemon name
-            foreach ($pokemonNames as $pokemonName) {
-                // 7. Find pokemon by unique pokemon name.
-                $pokemonDB = Pokemon::firstWhere('name', $pokemonName);
+            // 7. Get all existing pokemon whose name matches.
+            $pokemon = Pokemon::whereIn('name', $pokemonNames);
 
-                // 8. Save Relation
-                    $type = Type::firstOrCreate([
-                        "name" => $typeName,
-                    ]);
-                    $type->pokemon()->save($pokemonDB);
-            }
+            // 8. Associate many pokemon models to the type model.
+            $type->pokemon()->saveMany($pokemon);
         });
     }
 }
