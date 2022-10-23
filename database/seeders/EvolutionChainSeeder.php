@@ -37,17 +37,18 @@ class EvolutionChainSeeder extends Seeder
             $chainJson = fetchJson($chainUrl);
 
             // 5. traverse chain
-                $this->traverseChain($chainJson['chain']);
+            $this->traverseChain($chainJson['chain']);
 
-         });
+        });
     }
-    public function traverseChain($currentChainJson, $previousChainDB=null) {
-            $nextEvolutions = $currentChainJson['evolves_to'];
-            $previousEvolutionChainDB = $this->handleCurrentChain($currentChainJson, $previousChainDB);
-            foreach ($nextEvolutions as $nextEvolution) {
-                $this->traverseChain($nextEvolution, $previousEvolutionChainDB);
-            }
 
+    public function traverseChain($currentChainJson, $previousChainDB=null) {
+        $nextEvolutions = $currentChainJson['evolves_to'];
+        $previousEvolutionChainDB = $this->handleCurrentChain($currentChainJson, $previousChainDB);
+
+        foreach ($nextEvolutions as $nextEvolution) {
+            $this->traverseChain($nextEvolution, $previousEvolutionChainDB);
+        }
     }
 
     public function handleCurrentChain ($currentChainJson, $previousChainDB=null) {
@@ -61,7 +62,7 @@ class EvolutionChainSeeder extends Seeder
             $previousChainDB->evolveFrom()->save($evolutionChain);
 
         }
-        return $evolutionChain;
 
+        return $evolutionChain;
     }
 }

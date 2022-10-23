@@ -38,32 +38,29 @@ class PokedexSeeder extends Seeder
             $pokedexJson = fetchJson($pokedexUrl);
 
             // 5. Assign variables for easy access.
-            $pokedexName = $pokedexJson['name'];
-
-            // $speciesNames = collect($pokedexJson['pokemon_entries'])->pluck('pokemon_species.name');
-
-
-            // 6. Save Pokedex
             $pokedex = Pokedex::firstOrCreate([
-                'name' => $pokedexName,
+                'name' => $pokedexJson['name'],
                 'is_main_series' => $pokedexJson['is_main_series'],
             ]);
-            // 7. Loop over every pokemon name
-            foreach ($pokedexJson['pokemon_entries'] as $entry) {
 
-                // 8. Find pokemon by unique pokemon name.
-                $speciesJson = $entry['pokemon_species'];
-                $speciesDB = Species::firstWhere('name', $speciesJson['name']);
+            $speciesNames = [];
+            $pivotData = [];
 
-                // 9. save pivot relation
-                $pokedex->species()->attach($speciesDB, [
+            // 5. Loop over each entry to build an array of species name and their entry numbers.
+            foreach($pokedexJson['pokemon_entries'] as $entry) {
+                $speciesNames[] = $entry['pokemon_species']['name'];
+                $pivotData[] = [
                     'entry_number' => $entry['entry_number'],
-                ]);
+                ];
             }
 
-            // 10. Assign region
-            // $region = Region::firstWhere('name', optional($pokedexJson['region'])['name']);
-            // $pokedex->region()
+            // 6. Get species where name matches, maintain same order as $speciesName
+            $speciesIds = Species::whereIn('name', $speciesNames)
+                ->orderByRaw("FIELD(name, '". implode("','", $speciesNames) ."')")
+                ->pluck('id');
+
+            // 7. combine speciesIds and pivot data to attach species to pokedex.
+            $pokedex->species()->attach($speciesIds->combine($pivotData));
 
         });
     }
