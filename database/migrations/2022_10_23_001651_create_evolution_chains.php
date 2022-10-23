@@ -1,10 +1,10 @@
 <?php
 
-use App\Models\EvolutionDetails;
-use App\Models\Pokemon;
+use App\Models\EvolutionChain;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use App\Models\Species;
 
 return new class extends Migration
 {
@@ -17,12 +17,10 @@ return new class extends Migration
     {
         Schema::create('evolution_chains', function (Blueprint $table) {
             $table->id();
-            $table->foreignIdFor(EvolutionDetails::class);
-            $table->foreignIdFor(Pokemon::class, 'evolves_from_id');
-            $table->foreignIdFor(Pokemon::class, 'evolves_to_id');
-            $table->foreignIdFor(Pokemon::class, 'pokemon_id');
-
-
+            $table->foreignIdFor(Species::class)->nullable();
+            $table->foreignIdFor(EvolutionChain::class, 'evolveTo')->nullable();
+            $table->foreignIdFor(EvolutionChain::class, 'evolveFrom')->nullable();
+            // $table->foreignIdFor(Item::class)->nullable();
         });
     }
 
@@ -34,6 +32,5 @@ return new class extends Migration
     public function down()
     {
         Schema::dropIfExists('evolution_chains');
-
     }
 };

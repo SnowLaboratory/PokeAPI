@@ -29,6 +29,7 @@ class DatabaseSeeder extends Seeder
             AbilitySeeder::class,
             PokedexSeeder::class,
             RegionSeeder::class,
+            EvolutionChainSeeder::class,
         ]);
     }
 }

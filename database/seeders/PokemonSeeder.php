@@ -20,7 +20,6 @@ class PokemonSeeder extends Seeder
             'game_pokemon',
             'gender_pokemon',
             'pokemon_type',
-            'pokemon_weakness',
             'pokemon',
         ]);
 
