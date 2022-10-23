@@ -1,7 +1,7 @@
 <?php
 
-use App\Models\Generation;
-use App\Models\Pokemon;
+
+use App\Models\Species;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -17,13 +17,9 @@ return new class extends Migration
     {
         Schema::create('generations', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
+            $table->string('name')->unique();
         });
 
-        Schema::create('generation_pokemon', function (Blueprint $table) {
-            $table->foreignIdFor(Pokemon::class);
-            $table->foreignIdFor(Generation::class);
-        });
     }
 
     /**
@@ -34,7 +30,5 @@ return new class extends Migration
     public function down()
     {
         Schema::dropIfExists('generations');
-        Schema::dropIfExists('generation_pokemon');
-
     }
 };

@@ -2,12 +2,9 @@
 
 namespace Database\Seeders;
 
-use App\Jobs\ImportGame;
 use App\Models\Game;
 use App\Models\Pokemon;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\Http;
 use SmeltLabs\PocketMonsters\EndpointBuilder;
 use Database\Traits\CanTruncateTables;
 use Database\Traits\CanDisplayProgress;
@@ -41,15 +38,19 @@ class GameSeeder extends Seeder
 
             // 5. Assign variables for easy access.
             $pokemonName = $pokemonJson['name'];
+
             $gameNames = collect($pokemonJson['game_indices'])->pluck('version.name');
 
             // 6. Loop over every pokemon name
             foreach ($gameNames as $pokemonFeaturedIn) {
                 // 7. Find pokemon by unique pokemon name.
-                $pokemonDB = Pokemon::where('name', $pokemonName)->firstOrFail();
+                $pokemonDB = Pokemon::firstWhere('name', $pokemonName);
 
-                // 8. Dispatch ImportType job
-                ImportGame::dispatch($pokemonFeaturedIn, $pokemonDB);
+                // 8. Save Relation
+                $game = Game::firstOrCreate([
+                    'name' => $pokemonFeaturedIn
+                ]);
+                $game->pokemon()->save($pokemonDB);
             }
         });
     }

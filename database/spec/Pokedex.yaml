@@ -1,0 +1,25 @@
+[Pokedex]
+- id:
+  type: Number
+  primary: true
+
+- name:
+  type: String
+  unique: true
+
+- is_main_series:
+  type: Boolean
+
+
+[Relation]
+- region:
+  type: BelongsTo
+  model: Region
+
+- species:
+  type: ManyToMany
+  model: Species
+  pivot: pokedex_species
+  fields:
+    entry_number: number
+
