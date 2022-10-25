@@ -7,6 +7,10 @@ use Database\Traits\CanDisplayProgress;
 use Database\Traits\CanTruncateTables;
 use SmeltLabs\PocketMonsters\EndpointBuilder;
 use App\Models\Species;
+use App\Models\Trigger;
+use Illuminate\Support\Str;
+use App\Models\EvolutionPath;
+
 class EvolutionChainSeeder extends Seeder
 {
     use CanTruncateTables;
@@ -56,13 +60,39 @@ class EvolutionChainSeeder extends Seeder
 
         $evolutionChain = $speciesDB->evolutionChain()->firstOrCreate();
 
+        $evolutionPaths = $currentChainJson['evolution_details'];
+        $this->handleEvolutionPaths($evolutionPaths);
+
         if (isset($previousChainDB)) {
             $evolutionChain->evolveTo()->save($previousChainDB);
             $previousChainDB->evolveFrom()->save($evolutionChain);
 
         }
-
-
         return $evolutionChain;
     }
+
+    public function handleEvolutionPaths ($evolutionPaths) {
+        foreach ($evolutionPaths as $evolutionPath) {
+            $this->handleEvolutionPath($evolutionPath);
+        }
+    }
+
+    public function handleEvolutionPath ($evolutionPath) {
+        // when($evolutionPath['trigger'], [$this, 'handleTrigger']);
+        // Call handleXXX when value of a evolution detail item contains information
+        $evolutionPathDB = EvolutionPath::create();
+        foreach ($evolutionPath as $key => $value) {
+            $method = 'handle'.Str::studly($key);
+            if(method_exists($this, $method)) {
+                when($value, [$this, $method], $evolutionPathDB);
+            }
+        }
+
+    }
+
+    public function handleTrigger($triggerJson, $evolutionPathDB) {
+        $trigger = Trigger::firstWhere('name', $triggerJson['name']);
+        $evolutionPathDB->trigger()->associate($trigger)->save();
+    }
+
 }

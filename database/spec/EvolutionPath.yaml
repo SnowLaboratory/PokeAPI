@@ -9,6 +9,12 @@
   type: BelongsTo
   model: Trigger
 
-  - trigger_requirements:
-  type: HasMany
-  model: TriggerRequirement
+- trigger_requirements:
+type: HasMany
+model: TriggerRequirement
+
+- evolution_chain:
+  type: BelongsTo
+  model: EvolutionChain
+
+
