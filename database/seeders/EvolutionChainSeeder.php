@@ -7,7 +7,6 @@ use Database\Traits\CanDisplayProgress;
 use Database\Traits\CanTruncateTables;
 use SmeltLabs\PocketMonsters\EndpointBuilder;
 use App\Models\Species;
-
 class EvolutionChainSeeder extends Seeder
 {
     use CanTruncateTables;
@@ -62,6 +61,7 @@ class EvolutionChainSeeder extends Seeder
             $previousChainDB->evolveFrom()->save($evolutionChain);
 
         }
+
 
         return $evolutionChain;
     }
