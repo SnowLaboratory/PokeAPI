@@ -7,7 +7,6 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Relations\HasOne;
 
 use App\Models\Pivot\PokedexEntry;
 
@@ -16,6 +15,8 @@ class Species extends Model
     use HasFactory;
 
     protected $guarded = [];
+
+    public $timestamps = false;
 
     public function pokemon () : HasMany {
         return $this->hasMany(Pokemon::class);
@@ -33,7 +34,7 @@ class Species extends Model
         return $this->belongsToMany(Pokedex::class)->using(PokedexEntry::class)->withPivot('entry_number');
     }
 
-    public function evolutionChain () : HasOne {
-        return $this->hasOne(EvolutionChain::class);
+    public function evolutionChain () : HasMany {
+        return $this->hasMany(EvolutionChain::class);
     }
 }

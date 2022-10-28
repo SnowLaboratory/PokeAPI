@@ -18,4 +18,8 @@ class EvolutionPath extends Model
     public function trigger () : BelongsTo {
         return $this->belongsTo(Trigger::class);
     }
+
+    public function evolutionChain () : BelongsTo {
+        return $this->belongsTo(EvolutionChain::class);
+    }
 }

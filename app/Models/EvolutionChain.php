@@ -21,11 +21,11 @@ class EvolutionChain extends Model
     //     return $this->hasOne(EvolutionDetails::class);
     // }
 
-    public function evolveTo () : HasMany {
+    public function evolvesTo () : HasMany {
         return $this->hasMany(EvolutionChain::class, 'evolveTo');
     }
 
-    public function evolveFrom () : HasMany {
+    public function evolvesFrom () : HasMany {
         return $this->hasMany(EvolutionChain::class, 'evolveFrom');
     }
 
