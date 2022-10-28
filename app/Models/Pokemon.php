@@ -7,6 +7,7 @@ use App\Traits\HasImages;
 use App\Traits\HasStats;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Pokemon extends Model
 {
@@ -59,5 +60,9 @@ class Pokemon extends Model
     public function evolutionChains()
     {
         return $this->hasMany(EvolutionChain::class);
+    }
+
+    public function sprite () : HasOne {
+        return $this->hasOne(Sprite::class);
     }
 }
