@@ -3,6 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use App\Models\Pokemon;
 
 return new class extends Migration
 {
@@ -13,10 +14,11 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('triggers', function (Blueprint $table) {
+        Schema::create('sprites', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->string('description')->nullable();
+            $table->foreignIdFor(Pokemon::class)->nullable();
+            $table->string('storage_url')->nullable();
+            $table->string('api_url')->nullable();
         });
     }
 
@@ -27,6 +29,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('triggers');
+        Schema::dropIfExists('sprites');
     }
 };

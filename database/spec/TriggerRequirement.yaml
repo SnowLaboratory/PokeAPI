@@ -1,0 +1,35 @@
+[TriggerRequirement]
+- id:
+  type: Number
+  primary: true
+
+- name:
+  type: String
+  unique: true
+
+- boolean_value:
+  type: Boolean
+  nullable: true
+
+- number_value:
+  type: Number
+  nullable: true
+
+- time_value:
+  type: DateTime
+  nullable: true
+
+
+
+[Relations]
+- model:
+  type: morphOne
+  columns: model_id, model_type
+  examples:
+    1, Gender
+    5, Item
+    9, Location
+
+- evolution_path:
+  type: BelongsTo
+  model: EvolutionPath

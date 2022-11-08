@@ -7,6 +7,9 @@ use Database\Traits\CanDisplayProgress;
 use Database\Traits\CanTruncateTables;
 use SmeltLabs\PocketMonsters\EndpointBuilder;
 use App\Models\Species;
+use App\Models\Trigger;
+use Illuminate\Support\Str;
+use App\Models\EvolutionPath;
 
 class EvolutionChainSeeder extends Seeder
 {
@@ -33,21 +36,21 @@ class EvolutionChainSeeder extends Seeder
 
         $this->progressMap($urls, function($chainUrl) {
 
-            // 4. Fetch all the data for a specific pokedexes
+            // 4. Fetch all the data for a specific chain
             $chainJson = fetchJson($chainUrl);
 
             // 5. traverse chain
-            $this->traverseChain($chainJson['chain']);
+            $this->traverseChain($chainJson['chain'], $chainJson);
 
         });
     }
 
-    public function traverseChain($currentChainJson, $previousChainDB=null) {
+    public function traverseChain($currentChainJson, $rootChainJson , $previousChainDB=null) {
         $nextEvolutions = $currentChainJson['evolves_to'];
         $previousEvolutionChainDB = $this->handleCurrentChain($currentChainJson, $previousChainDB);
 
         foreach ($nextEvolutions as $nextEvolution) {
-            $this->traverseChain($nextEvolution, $previousEvolutionChainDB);
+            $this->traverseChain($nextEvolution, $rootChainJson, $previousEvolutionChainDB);
         }
     }
 
@@ -55,14 +58,41 @@ class EvolutionChainSeeder extends Seeder
         $speciesName = $currentChainJson['species']['name'];
         $speciesDB = Species::firstWhere('name', $speciesName);
 
-        $evolutionChain = $speciesDB->evolutionChain()->firstOrCreate();
+        $evolutionChainDB = $speciesDB->evolutionChain()->create();
+        dump($speciesDB->name, $evolutionChainDB->id);
+        $evolutionPaths = $currentChainJson['evolution_details'];
+        $this->handleEvolutionPaths($evolutionPaths, $speciesName, $evolutionChainDB);
 
         if (isset($previousChainDB)) {
-            $evolutionChain->evolveTo()->save($previousChainDB);
-            $previousChainDB->evolveFrom()->save($evolutionChain);
+            $evolutionChainDB->evolvesTo()->save($previousChainDB);
+            $previousChainDB->evolvesFrom()->save($evolutionChainDB);
 
         }
+        return $evolutionChainDB;
+    }
 
-        return $evolutionChain;
+    public function handleEvolutionPaths ($evolutionPaths, $speciesName, $evolutionChainDB) {
+        foreach ($evolutionPaths as $evolutionPath) {
+            $this->handleEvolutionPath($evolutionPath, $speciesName, $evolutionChainDB);
+        }
+    }
+
+    public function handleEvolutionPath ($evolutionPath, $speciesName, $evolutionChainDB) {
+        // when($evolutionPath['trigger'], [$this, 'handleTrigger']);
+        // Call handleXXX when value of a evolution detail item contains information
+        $evolutionPathDB = EvolutionPath::create();
+        foreach ($evolutionPath as $key => $value) {
+            $method = 'handle'.Str::studly($key);
+            if(method_exists($this, $method)) {
+                when($value, [$this, $method], $evolutionPathDB, $speciesName, $evolutionChainDB);
+            }
+        }
+        // dump($evolutionChainDB->id);
+        $evolutionPathDB->evolutionChain()->associate($evolutionChainDB)->save();
+    }
+
+    public function handleTrigger($triggerJson, $evolutionPathDB, $speciesName) {
+        $trigger = Trigger::firstWhere('name', $triggerJson['name']);
+        $evolutionPathDB->trigger()->associate($trigger)->save();
     }
 }

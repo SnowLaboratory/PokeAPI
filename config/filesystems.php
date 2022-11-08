@@ -42,6 +42,13 @@ return [
             'visibility' => 'public',
         ],
 
+        'sprites' => [
+            'driver' => env('SPRITE_STORAGE_DRIVER', 'local'),
+            'root' => storage_path('app/public/sprites'),
+            'url' => env('SPRITE_STORAGE_URL', env('APP_URL').'/storage/sprites'),
+            'visibility' => 'public',
+        ],
+
         's3' => [
             'driver' => 's3',
             'key' => env('AWS_ACCESS_KEY_ID'),
