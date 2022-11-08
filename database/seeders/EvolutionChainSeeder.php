@@ -45,29 +45,33 @@ class EvolutionChainSeeder extends Seeder
         });
     }
 
-    public function traverseChain($currentChainJson, $rootChainJson , $previousChainDB=null) {
-        $nextEvolutions = $currentChainJson['evolves_to'];
-        $previousEvolutionChainDB = $this->handleCurrentChain($currentChainJson, $previousChainDB);
+    private function createChainFromSpecies($name) {
+        $speciesDB = Species::firstWhere('name', $name);
+        return $speciesDB->chain()->create();
+    }
 
-        foreach ($nextEvolutions as $nextEvolution) {
-            $this->traverseChain($nextEvolution, $rootChainJson, $previousEvolutionChainDB);
+    public function traverseChain($currentChainJson, $rootChainJson , $previousChainDB=null, $depth=0) {
+        // Create a chain record for current pokemon species.
+        $previousChainDB = $previousChainDB ?? $this->createChainFromSpecies($currentChainJson['species']['name']);
+
+        // Only handle the chain when it has evolutions
+        foreach ($currentChainJson['evolves_to'] as $nextEvolution) {
+            $previousEvolutionChainDB = $this->handleCurrentChain($nextEvolution, $previousChainDB, $depth);
+            $this->traverseChain($nextEvolution, $rootChainJson, $previousEvolutionChainDB, $depth + 1);
         }
     }
 
-    public function handleCurrentChain ($currentChainJson, $previousChainDB=null) {
+    public function handleCurrentChain ($currentChainJson, $previousChainDB=null, $depth=0) {
         $speciesName = $currentChainJson['species']['name'];
-        $speciesDB = Species::firstWhere('name', $speciesName);
 
-        $evolutionChainDB = $speciesDB->evolutionChain()->create();
-        dump($speciesDB->name, $evolutionChainDB->id);
+        $evolutionChainDB = $this->createChainFromSpecies($speciesName);
+
         $evolutionPaths = $currentChainJson['evolution_details'];
         $this->handleEvolutionPaths($evolutionPaths, $speciesName, $evolutionChainDB);
 
-        if (isset($previousChainDB)) {
-            $evolutionChainDB->evolvesTo()->save($previousChainDB);
-            $previousChainDB->evolvesFrom()->save($evolutionChainDB);
+        $evolutionChainDB->previous()->save($previousChainDB);
+        $previousChainDB->next()->save($evolutionChainDB);
 
-        }
         return $evolutionChainDB;
     }
 
@@ -87,7 +91,7 @@ class EvolutionChainSeeder extends Seeder
                 when($value, [$this, $method], $evolutionPathDB, $speciesName, $evolutionChainDB);
             }
         }
-        // dump($evolutionChainDB->id);
+
         $evolutionPathDB->evolutionChain()->associate($evolutionChainDB)->save();
     }
 

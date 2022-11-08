@@ -9,10 +9,12 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 use App\Models\Pivot\PokedexEntry;
+use App\Traits\NameLookup;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Species extends Model
 {
-    use HasFactory;
+    use HasFactory, NameLookup;
 
     protected $guarded = [];
 
@@ -34,7 +36,7 @@ class Species extends Model
         return $this->belongsToMany(Pokedex::class)->using(PokedexEntry::class)->withPivot('entry_number');
     }
 
-    public function evolutionChain () : HasMany {
-        return $this->hasMany(EvolutionChain::class);
+    public function chain () : HasOne {
+        return $this->hasOne(EvolutionChain::class);
     }
 }
