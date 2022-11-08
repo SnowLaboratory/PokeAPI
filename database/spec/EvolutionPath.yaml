@@ -1,0 +1,20 @@
+[EvolutionPath]
+- id:
+  type: Number
+  primary: true
+
+
+  [Relations]
+- trigger:
+  type: BelongsTo
+  model: Trigger
+
+- trigger_requirements:
+type: HasMany
+model: TriggerRequirement
+
+- evolution_chain:
+  type: BelongsTo
+  model: EvolutionChain
+
+

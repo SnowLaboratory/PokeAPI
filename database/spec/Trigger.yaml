@@ -1,0 +1,14 @@
+[Trigger]
+- id:
+  type: Number
+  primary: true
+
+- name:
+  type: String
+  unique: true
+
+[Relations]
+- evolution_path:
+  type: HasMany
+  model: EvolutionPath
+

@@ -5,9 +5,9 @@
 
 
   [Relations]
-- evolution_details:
+- evolution_paths:
   type: HasMany
-  model: EvolutionDetail
+  model: EvolutionPath
 
 - evolves_to:
   type: HasMany

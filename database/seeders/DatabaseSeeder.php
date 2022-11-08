@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\EvolutionPath;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -29,6 +30,7 @@ class DatabaseSeeder extends Seeder
             AbilitySeeder::class,
             PokedexSeeder::class,
             RegionSeeder::class,
+            TriggerSeeder::class,
             EvolutionChainSeeder::class,
         ]);
     }

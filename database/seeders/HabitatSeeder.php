@@ -30,23 +30,19 @@ class HabitatSeeder extends Seeder
             // 4. Fetch all the data for a specific habitat
             $habitatJson = fetchJson($habitatUrl);
 
-            // 5. Assign variables for easy access.
-            $habitatName = $habitatJson['name'];
-            $speciesNames = collect($habitatJson['pokemon_species'])->pluck('name');
-
+            // 5. Find or create a habitat model.
             $habitat = Habitat::firstOrCreate([
-                "name" => $habitatName,
+                "name" => $habitatJson['name'],
             ]);
 
-            // 6. Loop over every pokemon name
-            foreach ($speciesNames as $speciesName) {
-                // 7. Find pokemon by unique pokemon name.
+            // 6. Get a list of all the species names in a habitat.
+            $speciesNames = collect($habitatJson['pokemon_species'])->pluck('name');
 
-                $speciesDB = Species::firstWhere('name', $speciesName);
+            // 7. Get all existing species whose name matches.
+            $species = Species::whereIn('name', $speciesNames);
 
-                // 8. Save Relation
-                $speciesDB->habitat()->associate($habitat)->save();
-            }
+            // 8. Associate many species models to the habitat model.
+            $habitat->species()->saveMany($species);
         });
     }
 }

@@ -37,19 +37,18 @@ class GameSeeder extends Seeder
             $pokemonJson = fetchJson($pokemonUrl);
 
             // 5. Assign variables for easy access.
-            $pokemonName = $pokemonJson['name'];
+            $pokemonDB = Pokemon::firstWhere('name', $pokemonJson['name']);
 
             $gameNames = collect($pokemonJson['game_indices'])->pluck('version.name');
 
             // 6. Loop over every pokemon name
             foreach ($gameNames as $pokemonFeaturedIn) {
-                // 7. Find pokemon by unique pokemon name.
-                $pokemonDB = Pokemon::firstWhere('name', $pokemonName);
 
-                // 8. Save Relation
+                // 7. Save Relation
                 $game = Game::firstOrCreate([
                     'name' => $pokemonFeaturedIn
                 ]);
+
                 $game->pokemon()->save($pokemonDB);
             }
         });
