@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\EvolutionChain;
 use Illuminate\Database\Seeder;
 use Database\Traits\CanDisplayProgress;
 use Database\Traits\CanTruncateTables;
@@ -45,18 +46,14 @@ class EvolutionChainSeeder extends Seeder
         });
     }
 
-    private function createChainFromSpecies($name) {
-        $speciesDB = Species::firstWhere('name', $name);
-        return $speciesDB->chain()->create();
-    }
-
     public function traverseChain($currentChainJson, $rootChainJson , $previousChainDB=null, $depth=0) {
-        // Create a chain record for current pokemon species.
-        $previousChainDB = $previousChainDB ?? $this->createChainFromSpecies($currentChainJson['species']['name']);
 
-        // Only handle the chain when it has evolutions
+        $speciesName = $currentChainJson['species']['name'];
+
+        // 5.1 Only handle the chain when it has evolutions
         foreach ($currentChainJson['evolves_to'] as $nextEvolution) {
-            $previousEvolutionChainDB = $this->handleCurrentChain($nextEvolution, $previousChainDB, $depth);
+            $previousChain = $previousChainDB ?? Species::firstWhere('name', $speciesName)->chains()->create();
+            $previousEvolutionChainDB = $this->handleCurrentChain($nextEvolution, $previousChain, $depth);
             $this->traverseChain($nextEvolution, $rootChainJson, $previousEvolutionChainDB, $depth + 1);
         }
     }
@@ -64,13 +61,18 @@ class EvolutionChainSeeder extends Seeder
     public function handleCurrentChain ($currentChainJson, $previousChainDB=null, $depth=0) {
         $speciesName = $currentChainJson['species']['name'];
 
-        $evolutionChainDB = $this->createChainFromSpecies($speciesName);
+        $evolutionChainDB = Species::firstWhere('name', $speciesName)->chains()->create();
 
         $evolutionPaths = $currentChainJson['evolution_details'];
         $this->handleEvolutionPaths($evolutionPaths, $speciesName, $evolutionChainDB);
 
-        $evolutionChainDB->previous()->save($previousChainDB);
-        $previousChainDB->next()->save($evolutionChainDB);
+        // 5.2.1 Point the less evolved form to the more evolved form.
+        $previousChainDB->evolveTo = $evolutionChainDB->id;
+        $previousChainDB->save();
+
+        // 5.2.2 Point the more evolved form to the less evolved form.
+        $evolutionChainDB->evolveFrom = $previousChainDB->id;
+        $evolutionChainDB->save();
 
         return $evolutionChainDB;
     }

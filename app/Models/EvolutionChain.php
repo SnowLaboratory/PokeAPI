@@ -22,21 +22,21 @@ class EvolutionChain extends Model
     //     return $this->hasOne(EvolutionDetails::class);
     // }
 
-    public function next () : HasMany {
-        return $this->hasMany(EvolutionChain::class, 'evolveTo');
-    }
+    // public function next () {
+    //     return $this->belongsToMany(EvolutionChain::class, 'evolution_chains', 'evolveTo');
+    // }
 
-    public function evolvesTo () {
-        return $this->next()->with('evolvesTo.species');
-    }
+    // public function evolvesTo () {
+    //     return $this->next()->with('evolvesTo.species');
+    // }
 
-    public function previous () : HasMany {
-        return $this->hasMany(EvolutionChain::class, 'evolveFrom',);
-    }
+    // public function previous () : HasMany {
+    //     return $this->hasMany(EvolutionChain::class, 'evolveTo');
+    // }
 
-    public function evolvesFrom () {
-        return $this->previous()->with('evolvesFrom.species');
-    }
+    // public function evolvesFrom () {
+    //     return $this->previous()->with('evolvesFrom');
+    // }
 
     public function species () : BelongsTo {
         return $this->belongsTo(Species::class);

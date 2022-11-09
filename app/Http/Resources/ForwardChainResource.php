@@ -16,7 +16,7 @@ class ForwardChainResource extends JsonResource
     {
         return [
             'species' => SpeciesResource::make($this->species),
-            'evolvesTo' => static::collection($this->evolvesTo),
+            'evolvesTo' => static::collection($this->species->next),
         ];
     }
 }

@@ -16,7 +16,7 @@ class BackwardChainResource extends JsonResource
     {
         return [
             'species' => SpeciesResource::make($this->species),
-            'evolvesFrom' => static::collection($this->evolvesFrom),
+            'evolvesFrom' => static::collection($this->species->previous),
         ];
     }
 }

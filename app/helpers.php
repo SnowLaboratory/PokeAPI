@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
@@ -22,4 +23,10 @@ function page($view, JsonResource $jsonResource) {
 function when($value, callable $callback, ...$extraArgs) {
     if(!isset($value) || !$value) return;
     return call_user_func($callback, $value, ...$extraArgs);
+}
+
+function removeJoins(Builder $builder) {
+    foreach( $builder->getQuery()->joins as $key => $join) {
+        unset($builder->getQuery()->joins[$key]);
+    }
 }

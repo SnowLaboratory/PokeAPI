@@ -17,9 +17,15 @@ return new class extends Migration
     {
         Schema::create('evolution_chains', function (Blueprint $table) {
             $table->id();
-            $table->foreignIdFor(Species::class)->nullable();
-            $table->foreignIdFor(EvolutionChain::class, 'evolveTo')->nullable();
-            $table->foreignIdFor(EvolutionChain::class, 'evolveFrom')->nullable();
+
+            $table->bigInteger('species_id')->unsigned()->nullable();
+            $table->foreign('species_id')->references('id')->on('species');
+
+            $table->bigInteger('evolveTo')->unsigned()->nullable();
+            $table->foreign('evolveTo')->references('id')->on('evolution_chains');
+
+            $table->bigInteger('evolveFrom')->unsigned()->nullable();
+            $table->foreign('evolveFrom')->references('id')->on('evolution_chains');
             // $table->foreignIdFor(Item::class)->nullable();
         });
     }
