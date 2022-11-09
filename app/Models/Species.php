@@ -9,14 +9,12 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 use App\Models\Pivot\PokedexEntry;
-use App\Relations\HasManyThroughSelf;
+use App\Traits\HasManyThroughSelf;
 use App\Traits\NameLookup;
-use Illuminate\Database\Eloquent\Relations\HasOne;
-use Illuminate\Support\Facades\DB;
 
 class Species extends Model
 {
-    use HasFactory, NameLookup;
+    use HasFactory, NameLookup, HasManyThroughSelf;
 
     protected $guarded = [];
 
@@ -42,10 +40,6 @@ class Species extends Model
         return $this->hasMany(EvolutionChain::class);
     }
 
-    public function hasManyThroughSelf($model, $foreignId=null, $table=null, $localId=null, $parentId=null) {
-        return new HasManyThroughSelf($this, app($model), $foreignId, $table, $localId, $parentId);
-    }
-
     public function next () {
         return $this->hasManyThroughSelf(EvolutionChain::class, 'evolveTo');
     }
@@ -61,22 +55,4 @@ class Species extends Model
     public function evolvesFrom () {
         return $this->previous()->with('species.evolvesFrom');
     }
-
-    // public function evolutions () {
-    //     $query = $this->hasManyThrough(EvolutionChain::class, EvolutionChain::class, 'species_id', 'ec.evolveTo');
-
-    //     // dd($query->getQuery()->getQuery()->joins);
-    //     // foreach( $query->getQuery()->getQuery()->joins as $key => $join) {
-    //     //     unset($query->getQuery()->getQuery()->joins[$key]);
-    //     // }
-    //     removeJoins($query->getQuery());
-
-    //         $query->join('evolution_chains as ec', 'ec.id', 'evolution_chains.evolveTo')
-    //         ->select(DB::raw('`ec`.*'))
-    //         // ->select(DB::raw('`ec`.evolveTo, `evolution_chains`.species_id'))
-    //         // ->from('evolution_chains as ec')
-    //         ;
-
-    //         return $query;
-    // }
 }

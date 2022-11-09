@@ -26,7 +26,6 @@ return new class extends Migration
 
             $table->bigInteger('evolveFrom')->unsigned()->nullable();
             $table->foreign('evolveFrom')->references('id')->on('evolution_chains');
-            // $table->foreignIdFor(Item::class)->nullable();
         });
     }
 
