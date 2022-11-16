@@ -14,12 +14,14 @@
         "php": "^8.0",
         "fruitcake/laravel-cors": "^2.0.5",
         "guzzlehttp/guzzle": "^7.2",
+        "inertiajs/inertia-laravel": "^0.6.3",
         "laravel/framework": "^9.0",
         "laravel/horizon": "^5.10",
-        "laravel/sanctum": "^2.14",
+        "laravel/sanctum": "^2.8",
         "laravel/tinker": "^2.7",
         "predis/predis": "^2.0",
-        "smelt-labs/laravel-pocket-monsters": "@dev"
+        "smelt-labs/laravel-pocket-monsters": "@dev",
+        "tightenco/ziggy": "^1.0"
     },
     "require-dev": {
         "barryvdh/laravel-ide-helper": "^2.12",
