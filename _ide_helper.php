@@ -4,7 +4,7 @@
 
 /**
  * A helper file for Laravel, to provide autocomplete information to your IDE
- * Generated for Laravel 9.35.1.
+ * Generated for Laravel 9.36.3.
  *
  * This file should not be included in your code, only analyzed by your IDE!
  *
@@ -12416,6 +12416,16 @@
         {
                         return \Illuminate\Http\Request::hasValidSignatureWhileIgnoring($ignoreQuery, $absolute);
         }
+                    /**
+         * 
+         *
+         * @see \Inertia\ServiceProvider::registerRequestMacro()
+         * @static 
+         */ 
+        public static function inertia()
+        {
+                        return \Illuminate\Http\Request::inertia();
+        }
          
     }
             /**
@@ -12702,6 +12712,7 @@
      * @method static \Illuminate\Routing\RouteRegistrar scopeBindings()
      * @method static \Illuminate\Routing\RouteRegistrar where(array $where)
      * @method static \Illuminate\Routing\RouteRegistrar withoutMiddleware(array|string $middleware)
+     * @method static \Illuminate\Routing\RouteRegistrar withoutScopedBindings()
      * @see \Illuminate\Routing\Router
      */ 
         class Route {
@@ -13589,6 +13600,19 @@
         {
                         /** @var \Illuminate\Routing\Router $instance */
                         return $instance->macroCall($method, $parameters);
+        }
+                    /**
+         * 
+         *
+         * @see \Inertia\ServiceProvider::registerRouterMacro()
+         * @param mixed $uri
+         * @param mixed $component
+         * @param mixed $props
+         * @static 
+         */ 
+        public static function inertia($uri, $component, $props = [])
+        {
+                        return \Illuminate\Routing\Router::inertia($uri, $component, $props);
         }
          
     }
@@ -17714,12 +17738,43 @@
         {
                         return \Illuminate\Http\Request::hasValidSignatureWhileIgnoring($ignoreQuery, $absolute);
         }
+                    /**
+         * 
+         *
+         * @see \Inertia\ServiceProvider::registerRequestMacro()
+         * @static 
+         */ 
+        public static function inertia()
+        {
+                        return \Illuminate\Http\Request::inertia();
+        }
          
     }
      
 }
 
     namespace Illuminate\Routing { 
+            /**
+     * 
+     *
+     * @mixin \Illuminate\Routing\RouteRegistrar
+     */ 
+        class Router {
+                    /**
+         * 
+         *
+         * @see \Inertia\ServiceProvider::registerRouterMacro()
+         * @param mixed $uri
+         * @param mixed $component
+         * @param mixed $props
+         * @static 
+         */ 
+        public static function inertia($uri, $component, $props = [])
+        {
+                        return \Illuminate\Routing\Router::inertia($uri, $component, $props);
+        }
+         
+    }
             /**
      * 
      *
@@ -17736,6 +17791,39 @@
         public static function resource($view, $resource)
         {
                         return \Illuminate\Routing\ResponseFactory::resource($view, $resource);
+        }
+         
+    }
+     
+}
+
+    namespace Illuminate\Testing { 
+            /**
+     * 
+     *
+     * @mixin \Illuminate\Http\Response
+     */ 
+        class TestResponse {
+                    /**
+         * 
+         *
+         * @see \Inertia\Testing\TestResponseMacros::assertInertia()
+         * @param \Closure|null $callback
+         * @static 
+         */ 
+        public static function assertInertia($callback = null)
+        {
+                        return \Illuminate\Testing\TestResponse::assertInertia($callback);
+        }
+                    /**
+         * 
+         *
+         * @see \Inertia\Testing\TestResponseMacros::inertiaPage()
+         * @static 
+         */ 
+        public static function inertiaPage()
+        {
+                        return \Illuminate\Testing\TestResponse::inertiaPage();
         }
          
     }
