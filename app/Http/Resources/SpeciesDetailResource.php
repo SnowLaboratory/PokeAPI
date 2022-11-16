@@ -20,7 +20,9 @@ class SpeciesDetailResource extends JsonResource
             'is_legendary' => (boolean) $this->is_legendary,
             'is_mythical' => (boolean) $this->is_mythical,
             'pokemon' => PokemonDetailResource::make($this->pokemon()->where('is_default', true)->first()),
-            'variations' => PokemonDetailResource::collection($this->pokemon()->where('is_default', false)->get())
+            'variations' => PokemonDetailResource::collection($this->pokemon()->where('is_default', false)->get()),
+            'evolvesTo' => ForwardChainResource::collection($this->next),
+            'evolvesFrom' => BackwardChainResource::collection($this->previous),
         ];
     }
 }
