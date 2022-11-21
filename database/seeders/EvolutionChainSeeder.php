@@ -11,6 +11,7 @@ use App\Models\Species;
 use App\Models\Trigger;
 use Illuminate\Support\Str;
 use App\Models\EvolutionPath;
+use App\Models\Item;
 
 class EvolutionChainSeeder extends Seeder
 {
@@ -21,6 +22,8 @@ class EvolutionChainSeeder extends Seeder
     {
         $this->truncate([
             'evolution_chains',
+            'metas',
+            'has_metas'
         ]);
 
         // 2. Fetch all the evolution chains from the API
@@ -100,5 +103,27 @@ class EvolutionChainSeeder extends Seeder
     public function handleTrigger($triggerJson, $evolutionPathDB, $speciesName) {
         $trigger = Trigger::firstWhere('name', $triggerJson['name']);
         $evolutionPathDB->trigger()->associate($trigger)->save();
+    }
+
+    public function handleHeldItem($heldItemJson, $evolutionPathDB, $speciesName, $evolutionChainDB) {
+        // dd($heldItemJson, $evolutionPathDB, $speciesName, $evolutionChainDB);
+
+        $itemDB = Item::firstOrCreate([
+            "name" => $heldItemJson['name'],
+        ]);
+        $evolutionChainDB->meta()->firstOrCreate([
+            "name" => 'held_item',
+            "value" => $itemDB->toJson()
+        ]);
+    }
+
+    public function handleItem($itemJson, $evolutionPathDB, $speciesName, $evolutionChainDB) {
+        $itemDB = Item::firstOrCreate([
+            "name" => $itemJson['name'],
+        ]);
+        $evolutionChainDB->meta()->firstOrCreate([
+            "name" => 'item',
+            "value" => $itemDB->toArray()
+        ]);
     }
 }

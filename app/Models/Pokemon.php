@@ -61,8 +61,4 @@ class Pokemon extends Model
     {
         return $this->hasMany(EvolutionChain::class);
     }
-
-    public function sprite () : HasOne {
-        return $this->hasOne(Sprite::class);
-    }
 }

@@ -16,7 +16,8 @@ return new class extends Migration
     {
         Schema::create('images', function (Blueprint $table) {
             $table->id();
-            $table->string('url');
+            $table->string('storage_url')->nullable();
+            $table->string('api_url')->nullable();
         });
 
         Schema::create('has_images', function (Blueprint $table) {

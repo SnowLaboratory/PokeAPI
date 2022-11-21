@@ -6,7 +6,7 @@ use App\Models\Meta;
 
 trait HasMetas
 {
-    public function category()
+    public function meta ()
     {
         return $this->morphToMany(Meta::class, 'model', 'has_metas');
     }
