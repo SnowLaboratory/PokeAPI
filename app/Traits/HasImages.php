@@ -6,7 +6,7 @@ use App\Models\Image;
 
 trait HasImages
 {
-    public function image()
+    public function images ()
     {
         return $this->morphToMany(Image::class, 'model', 'has_images');
     }
