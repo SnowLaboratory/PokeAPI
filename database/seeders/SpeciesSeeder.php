@@ -56,7 +56,7 @@ class SpeciesSeeder extends Seeder
             ]);
 
             // 7. Find all pokemon with matching names.
-            $pokemon = Pokemon::whereIn('name', $pokemonNames);
+            $pokemon = Pokemon::whereIn('name', $pokemonNames)->get();
 
             // 8. Associate those pokemon with the current species.
             $species->pokemon()->saveMany($pokemon);

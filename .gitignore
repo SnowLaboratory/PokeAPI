@@ -16,3 +16,6 @@ yarn-error.log
 /.idea
 /.vscode
 .DS_Store
+/examples
+/app/Http/Controllers/ExampleController.php
+/resources/js/Pages/Example/Example.vue

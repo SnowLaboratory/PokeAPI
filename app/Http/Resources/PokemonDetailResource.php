@@ -19,35 +19,44 @@ class PokemonDetailResource extends JsonResource
             "name" => $this->name,
             "weight" => $this->weight,
             "height" => $this->height,
-            "stats" => [],
-            "sprites" => [],
-            "growth_rate" => [
-                "name" => null,
-            ],
-            "pokedex" => [
-                "indices" => [],
-            ],
-            "types" => [],
-            "ability" => [
-                "name" => null,
-            ],
-            "evolution" => [
-                "details" => [
-                    "meta" => [],
-                    "trigger" => [
-                        "name" => null,
-                    ],
-                ],
-            ],
-            "generation" => [
-                "name" => null,
-                "main_region" => [
-                    "name" => null,
-                ],
-            ],
-            "habitat" => [
-                "name" => null,
-            ],
+            "formatted_name" => str($this->name)->headline()->value(),
+            ...$this->getImages(),
+            // "stats" => [],
+            // "sprites" => [],
+            // "growth_rate" => [
+            //     "name" => null,
+            // ],
+            // "pokedex" => [
+            //     "indices" => [],
+            // ],
+            // "types" => [],
+            // "ability" => [
+            //     "name" => null,
+            // ],
+            // "evolution" => [
+            //     "details" => [
+            //         "meta" => [],
+            //         "trigger" => [
+            //             "name" => null,
+            //         ],
+            //     ],
+            // ],
+            // "generation" => [
+            //     "name" => null,
+            //     "main_region" => [
+            //         "name" => null,
+            //     ],
+            // ],
+            // "habitat" => [
+            //     "name" => null,
+            // ],
+        ];
+    }
+
+    public function getImages ()
+    {
+        return [
+            "images" => ImageResource::collection($this->images),
         ];
     }
 }

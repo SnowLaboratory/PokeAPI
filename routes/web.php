@@ -25,4 +25,10 @@ Route::get('/generation/{generation:name}', [GuestController::class, 'generation
 
 Route::get('/pokemon/{species:name}', [GuestController::class, 'pokemonDetail']);
 
+Route::get('/example', [ExampleController::class, 'speciesDetailsFakeData']);
 
+Route::get('/example/{species}', [ExampleController::class, 'speciesDetailsLiveData']);
+
+// Route::get('/example/{species}', [ExampleController::class, 'speciesDetailOnly']);
+
+// Route::get('/example/{species}', [ExampleController::class, 'speciesDetailEagerLoading']);
