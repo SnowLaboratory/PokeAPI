@@ -41,5 +41,6 @@ return new class extends Migration
     {
         Schema::dropIfExists('types');
         Schema::dropIfExists('pokemon_type');
+        Schema::dropIfExists('damage_relation');
     }
 };
