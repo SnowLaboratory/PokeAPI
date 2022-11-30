@@ -1,6 +1,8 @@
+/bootstrap/ssr
 /node_modules
 /public/hot
 /public/storage
+/public/build/
 /storage/*.key
 /vendor
 .env
@@ -14,3 +16,6 @@ yarn-error.log
 /.idea
 /.vscode
 .DS_Store
+/examples
+/app/Http/Controllers/ExampleController.php
+/resources/js/Pages/Example/Example.vue

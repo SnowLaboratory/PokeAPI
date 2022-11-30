@@ -11,5 +11,7 @@ class Item extends Model
 {
     use HasFactory, HasCategories, HasImages;
 
+    public $guarded = [];
+
     public $timestamps = false;
 }

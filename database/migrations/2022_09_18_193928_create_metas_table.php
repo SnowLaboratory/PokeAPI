@@ -17,7 +17,7 @@ return new class extends Migration
         Schema::create('metas', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('value');
+            $table->json('value');
         });
 
         Schema::create('has_metas', function (Blueprint $table) {

@@ -6,6 +6,7 @@ use App\Http\Resources\SpeciesDetailResource;
 use App\Models\Generation;
 use App\Models\Pokemon;
 use App\Models\Species;
+use Inertia\Inertia;
 
 class GuestController extends Controller
 {
@@ -18,6 +19,9 @@ class GuestController extends Controller
     }
 
     public function pokemonDetail (Species $species) {
+        $species->load(['pokemon.images']);
+        // return $species;
+        return Inertia::resource('Pokemon/Detail', SpeciesDetailResource::make($species));
         return page('pokemon.detail', SpeciesDetailResource::make($species));
     }
 }

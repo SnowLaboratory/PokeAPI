@@ -10,4 +10,8 @@ class Meta extends Model
     use HasFactory;
 
     public $timestamps = false;
+
+    protected $guarded = [];
+
+    public $casts = ['value' => 'array'];
 }
