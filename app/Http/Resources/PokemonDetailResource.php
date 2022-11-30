@@ -15,6 +15,8 @@ class PokemonDetailResource extends JsonResource
     public function toArray($request)
     {
         return [
+            'id' => $this->when($request->boolean('glue'), $this->id),
+            'class' => $this->when($request->boolean('glue'), get_class($this->resource)),
             "is_default" => $this->is_default,
             "name" => $this->name,
             "weight" => $this->weight,

@@ -15,6 +15,8 @@ class SpeciesResource extends JsonResource
     public function toArray($request)
     {
         return [
+            'id' => $this->when($request->boolean('glue'), $this->id),
+            'class' => $this->when($request->boolean('glue'), get_class($this->resource)),
             'name' => $this->name,
             'capture_rate' => $this->capture_rate,
             'is_legendary' => (boolean) $this->is_legendary,

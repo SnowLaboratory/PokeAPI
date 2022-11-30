@@ -47,8 +47,8 @@ class ItemSeeder extends Seeder
             $hash = sha1($sprite);
             $fileName = $hash . '.png';
 
-            $storageUrl = tap(Storage::disk('sprites'), function($disk) use($fileName, $sprite) {
-                if(!$disk->exists($fileName)) {
+            $storageUrl = tap(Storage::disk('sprites'), function($disk) use($fileName, $sprite, $itemJson) {
+                if(!$disk->exists($fileName) && !empty($sprite)) {
                     $imageData = Http::get($sprite)->body();
                     $disk->put($fileName, $imageData);
                 }
@@ -57,7 +57,7 @@ class ItemSeeder extends Seeder
             $item = Item::firstOrCreate(["name" => $itemName]);
 
             $spriteDB = $item->images()->firstOrCreate([
-                'storage_url' => $storageUrl,
+                'storage_url' => !empty($sprite) ? $storageUrl : null,
                 'api_url' => $sprite
             ]);
         });
