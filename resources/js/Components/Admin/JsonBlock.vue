@@ -32,9 +32,9 @@ const canGlue = o => {
             <div v-for="key in Object.keys(obj ?? {})" >
 
                 <div v-if="Array.isArray(obj[key])" class="ml-3 array">
-                    <!-- <JsonKey>
+                    <JsonKey>
                             {{ key }}
-                    </JsonKey> -->
+                    </JsonKey>
 
                     <JsonBlock :obj="Object.assign({}, obj[key])" format-as-array/>
                 </div>
