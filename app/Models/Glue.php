@@ -9,5 +9,9 @@ class Glue extends Model
 {
     use HasFactory;
 
+    public $guarded = [];
+
+    public $timestamps = false;
+
     public $table = 'glue';
 }

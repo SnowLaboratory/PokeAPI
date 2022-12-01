@@ -21,4 +21,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/glue', [GlueController::class, 'create']);
+Route::post('/glue/names', [GlueController::class, 'names'])->name('glue.names');
+Route::post('/glue/fetch', [GlueController::class, 'fetch'])->name('glue.fetch');
+Route::post('/glue/save', [GlueController::class, 'save'])->name('glue.save');
 

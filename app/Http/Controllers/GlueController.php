@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Glue;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -15,6 +16,41 @@ class GlueController extends Controller
     public function index()
     {
         //
+    }
+
+    public function names(Request $request) {
+        $names = Glue::where('base_type', $request->input('base_type'))
+            ->where('base_id', $request->input('base_id'))
+            ->where('foreign_id', $request->input('foreign_id'))
+            ->where('foreign_type', $request->input('foreign_type'))
+            ->pluck('name');
+
+        return response()->json($names);
+    }
+
+    public function fetch(Request $request) {
+        $glue = Glue::where('base_type', $request->input('base_type'))
+            ->where('base_id', $request->input('base_id'))
+            ->where('foreign_id', $request->input('foreign_id'))
+            ->where('foreign_type', $request->input('foreign_type'))
+            ->where('name', $request->input('name'))
+            ->first();
+
+        return response()->json(json_decode($glue?->data));
+    }
+
+    public function save(Request $request) {
+        $glue = Glue::updateOrCreate([
+            'name' => $request->input('name'),
+            'base_id' => $request->input('base_id'),
+            'base_type' => $request->input('base_type'),
+            'foreign_id' => $request->input('foreign_id'),
+            'foreign_type' => $request->input('foreign_type'),
+        ], [
+            'data' => $request->input('json'),
+        ]);
+
+        return response()->json($glue);
     }
 
     /**

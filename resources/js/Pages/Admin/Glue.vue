@@ -1,33 +1,81 @@
 <script setup>
 import axios from 'axios';
-import { ref } from 'vue';
-import JsonBlock from './JsonBlock.vue';
-import {RadioGroup} from '@headlessui/vue'
+import { ref, computed } from 'vue';
+import JsonPicker from '@/Components/Admin/JsonPicker.vue';
+import { useForm } from '@inertiajs/inertia-vue3';
+import { Combobox, ComboboxInput, ComboboxOptions, ComboboxOption } from '@headlessui/vue';
 
-const baseUrl = ref("")
-const foreignUrl = ref("")
-const baseJson = ref(null);
-const foreignJson = ref(null);
+const form = useForm({
+    base_id: null,
+    base_type: null,
+    foreign_id: null,
+    foreign_type: null,
+    json: null,
+    name: null,
+})
 
-
-const getJson = () => {
-    baseJson.value = null
-    axios.get(`${baseUrl.value}?json=true&glue=true`)
-    .then(result => {
-        baseJson.value = result.data;
-    })
+const selectBase = obj => {
+    form.base_id = obj.id
+    form.base_type = obj.class
+    fetchGlue()
 }
 
-const getJson2 = () => {
-    foreignJson.value = null
-    axios.get(`${foreignUrl.value}?json=true&glue=true`)
-    .then(result => {
-        foreignJson.value = result.data;
-    })
+const selectForeign = obj => {
+    form.foreign_id = obj.id
+    form.foreign_type = obj.class
+    fetchGlue()
 }
 
-const base = ref(null)
-const foreign = ref(null)
+const names = ref(null)
+
+const selectedName = ref(null)
+const typedName = ref(null)
+
+const wantedName = computed(() => selectedName.value ?? typedName.value)
+
+const fetchGlue = () => {
+    if (form.foreign_id && form.base_id) {
+        console.log(form.data)
+        axios.post(route('admin.glue.names'), form.data())
+        .then(res => {
+            names.value = res.data
+        })
+    }
+}
+
+const changeInput = e => {
+    if (e.target.value) {
+        typedName.value = e.target.value
+    }
+}
+
+const glueJson = ref(null)
+const comboboxInput = ref(null)
+
+const fetchGlueJson = () => {
+    comboboxInput.value.el.value = wantedName.value
+    if (form.foreign_id && form.base_id && wantedName.value) {
+        // console.log(wantedName.value)
+        form.name = wantedName.value
+        axios.post(route('admin.glue.fetch'), form.data())
+        .then(res => {
+            form.json = JSON.stringify(res.data)
+        })
+    }
+}
+
+const submitGlueJson = () => {
+    comboboxInput.value.el.value = wantedName.value
+    if (form.foreign_id && form.base_id && wantedName.value && form.json) {
+        // console.log(wantedName.value)
+        axios.post(route('admin.glue.save'), form.data())
+        .then(res => {
+            console.log({res})
+        })
+    }
+}
+
+
 
 </script>
 
@@ -36,31 +84,37 @@ const foreign = ref(null)
         <h1 class="text-xl font-bold mb-8">Model Gluer</h1>
 
         <div class="flex -mx-3">
-            <form @submit.prevent="getJson" class="text-sm font-mono w-1/2 p-3">
-                <input type="search" v-model="baseUrl" @blur="getJson" @change="getJson"
-                        class="text-sm font-mono px-3 py-1 w-full border border-gray-200"
-                        placeholder="base"/>
-
-                <div v-if="baseJson" class="w-full overflow-scroll border whitespace-pre -mt-1 p-3 h-96">
-                    <RadioGroup v-model="base">
-                        <JsonBlock :obj="baseJson" />
-                    </RadioGroup>
-                </div>
-            </form>
-
-            <form @submit.prevent="getJson2" class="text-sm font-mono w-1/2 p-3">
-                <input type="search" v-model="foreignUrl" @blur="getJson2" @change="getJson2"
-                        class="text-sm font-mono px-3 py-1 w-full border border-gray-200"
-                        placeholder="foreign"/>
-
-                <div v-if="foreignJson" class="w-full overflow-scroll border whitespace-pre -mt-1 p-3 h-96">
-                    <RadioGroup v-model="foreign">
-                        <JsonBlock :obj="foreignJson" />
-                    </RadioGroup>
-                </div>
-            </form>
+            <JsonPicker placeholder="base" @selected="selectBase"/>
+            <JsonPicker placeholder="foreign" @selected="selectForeign"/>
         </div>
 
+        <div>Glue Name</div>
+        <div class="flex space-x-3">
+            <Combobox v-model="selectedName">
+                <div class="relative">
+                    <ComboboxInput ref="comboboxInput" @change.stop="changeInput"/>
+                    <ComboboxOptions class="absolute">
+                        <ComboboxOption
+                            v-for="name in names"
+                            :value="name"
+                        >
+                            {{ name }}
+                        </ComboboxOption>
+                    </ComboboxOptions>
+                </div>
+            </Combobox>
+            <button class="bg-slate-900 rounded px-3 py-1 text-white" @click.prevent="fetchGlueJson">Select Name</button>
+
+        </div>
+
+
+
+        <div class="mt-8">
+            <div>Glue JSON</div>
+            <textarea v-model="form.json"></textarea>
+        </div>
+
+        <button class="bg-slate-900 rounded px-3 py-1 text-white" @click.prevent="submitGlueJson">Save</button>
 
     </div>
 </template>
