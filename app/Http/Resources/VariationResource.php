@@ -15,9 +15,8 @@ class VariationResource extends JsonResource
     public function toArray($request)
     {
         return [
+            $this->mergeWhen($request->boolean('glue'), $this->glueResourceHelpers()),
             ...parent::toArray($request),
-            'id' => $this->when($request->boolean('glue'), $this->id),
-            'class' => $this->when($request->boolean('glue'), get_class($this->resource)),
         ];
     }
 }

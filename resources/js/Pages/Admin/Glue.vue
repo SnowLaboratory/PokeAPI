@@ -15,14 +15,14 @@ const form = useForm({
 })
 
 const selectBase = obj => {
-    form.base_id = obj.id
-    form.base_type = obj.class
+    form.base_id = obj['#id']
+    form.base_type = obj['#class']
     fetchGlue()
 }
 
 const selectForeign = obj => {
-    form.foreign_id = obj.id
-    form.foreign_type = obj.class
+    form.foreign_id = obj['#id']
+    form.foreign_type = obj['#class']
     fetchGlue()
 }
 

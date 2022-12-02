@@ -2,13 +2,16 @@
 
 namespace App\Models;
 
+use App\Interfaces\Glue;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use App\Traits\HasMetas;
-class EvolutionChain extends Model
+use App\Traits\InteractsWithGlue;
+
+class EvolutionChain extends Model implements Glue
 {
-    use HasFactory, HasMetas;
+    use HasFactory, HasMetas, InteractsWithGlue;
 
     public $timestamps = false;
 

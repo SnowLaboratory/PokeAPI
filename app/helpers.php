@@ -20,7 +20,10 @@ function page($view, JsonResource $jsonResource) {
     return response()->resource($view, $jsonResource);
 }
 
-function when($value, callable $callback, ...$extraArgs) {
+function when($value, $callback, ...$extraArgs) {
     if(!isset($value) || !$value) return;
-    return call_user_func($callback, $value, ...$extraArgs);
+    if (is_callable($callback)) {
+        return call_user_func($callback, $value, ...$extraArgs);
+    }
+    return $callback;
 }

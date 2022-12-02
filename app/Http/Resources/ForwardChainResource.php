@@ -15,8 +15,7 @@ class ForwardChainResource extends JsonResource
     public function toArray($request)
     {
         return [
-            'id' => $this->when($request->boolean('glue'), $this->id),
-            'class' => $this->when($request->boolean('glue'), get_class($this->resource)),
+            $this->mergeWhen($request->boolean('glue'), $this->glueResourceHelpers()),
             'species' => SpeciesResource::make($this->species),
             'evolvesTo' => static::collection($this->species->next),
         ];

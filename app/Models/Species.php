@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Interfaces\Glue;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -10,11 +11,12 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 use App\Models\Pivot\PokedexEntry;
 use App\Traits\HasManyThroughSelf;
+use App\Traits\InteractsWithGlue;
 use App\Traits\NameLookup;
 
-class Species extends Model
+class Species extends Model implements Glue
 {
-    use HasFactory, NameLookup, HasManyThroughSelf;
+    use HasFactory, NameLookup, HasManyThroughSelf, InteractsWithGlue;
 
     protected $guarded = [];
 
