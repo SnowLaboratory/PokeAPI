@@ -18,6 +18,7 @@ class PokemonStubResource extends JsonResource
         return [
             $this->mergeWhen($request->boolean('glue'), $this->glueResourceHelpers()),
             "name" => $this->name,
+            "images" => ImageResource::collection($this->images),
         ];
     }
 }
