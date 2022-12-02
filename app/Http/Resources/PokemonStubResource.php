@@ -19,6 +19,7 @@ class PokemonStubResource extends JsonResource
             'id' => $this->when($request->boolean('glue'), $this->id),
             'class' => $this->when($request->boolean('glue'), get_class($this->resource)),
             "name" => $this->name,
+            "images" => ImageResource::collection($this->images),
         ];
     }
 }

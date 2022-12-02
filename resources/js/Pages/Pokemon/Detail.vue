@@ -6,15 +6,13 @@ import Variation from "@/Components/Variation/Variation.vue";
 import EvolutionChain from "@/Components/EvolutionChain/EvolutionChain.vue";
 import DamageRelation from "@/Components/DamageRelation/DamageRelation.vue";
 
+
 const props = defineProps({
     species: {
         type: Object,
         required: true,
     },
 });
-
-const species = computed(() => props.species);
-console.log(species);
 </script>
 
 <template>
@@ -24,7 +22,7 @@ console.log(species);
                 <div class="bg-slate-200 rounded-xl">
                     <img
                     class="w-full"
-                    :src="species.pokemon.images[0].storage_url"
+                    :src="species.pokemon.images[0].url"
                 />
                 </div>
                 <div class="capitalize font-bold text-center text-xl">
@@ -40,7 +38,7 @@ console.log(species);
             <div class="space-y-8 w-2/3">
                 <Card :has-external-heading="true">
                     <template #header>Evolution Chain</template>
-                    <EvolutionChain />
+                    <EvolutionChain :species="species" />
                 </Card>
 
                 <Card :has-external-heading="true">

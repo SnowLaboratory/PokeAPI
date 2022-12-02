@@ -1,13 +1,15 @@
 <script setup>
 
-import EvolvesFrom from "@/Components/EvolutionChain/EvolvesFrom.vue";
-import EvolvesTo from "@/Components/EvolutionChain/EvolvesFrom.vue";
 import EvolutionLayout from "@/Components/EvolutionChain/EvolutionLayout.vue";
 
 
 const props = defineProps({
     species: {
         type: Object,
+    },
+
+    evolvesFrom: {
+        type: Array,
         required: true,
     },
 });
@@ -15,8 +17,7 @@ const props = defineProps({
 
 <template>
     <div>
-        <EvolvesTo :species="null" :evolvesFrom="species.evolvesTo" />
         <EvolutionLayout :species="species" />
-        <EvolvesFrom :species="null" :evolvesFrom="species.evolvesFrom" />
+        <EvolvesFrom v-for="evolution in evolvesFrom" :species="evolution.species" :evolvesFrom="evolution.evolvesFrom" />
     </div>
 </template>
