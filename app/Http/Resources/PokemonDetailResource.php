@@ -24,11 +24,13 @@ class PokemonDetailResource extends JsonResource
             "formatted_name" => str($this->name)->headline()->value(),
             'evolvesTo' => ForwardChainResource::collection(
                 $this->species->next->map->species->map->pokemon->flatten()
+                ->where('is_default', true)
                 ->merge($this->extraEvolvesTo->pluck('foreign'))
                 ->diff($this->removesEvolvesTo->pluck('foreign'))
             ),
             'evolvesFrom' => BackwardChainResource::collection(
                 $this->species->previous->map->species->map->pokemon->flatten()
+                ->where('is_default', true)
                 ->merge($this->extraEvolvesFrom->pluck('foreign'))
                 ->diff($this->removesEvolvesFrom->pluck('foreign'))
             ),

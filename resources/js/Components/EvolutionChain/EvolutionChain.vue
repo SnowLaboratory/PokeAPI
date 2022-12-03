@@ -14,13 +14,12 @@ const props = defineProps({
 </script>
 
 <template>
-    <div>
-        <div class="flex flex-col-reverse">
+    <div class="flex flex-wrap">
+        <div class="flex flex-row-reverse">
             <EvolvesFrom :evolvesFrom="species.pokemon.evolvesFrom" />
         </div>
 
         <EvolutionLayout :variation="species.pokemon" class="bg-slate-200 rounded-full"/>
-        <EvolutionLayout :variation="variation" v-for="variation in species.variations" />
         <EvolvesTo :evolvesTo="species.pokemon.evolvesTo" />
     </div>
 </template>

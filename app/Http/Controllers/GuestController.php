@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\SpeciesDetailResource;
+use App\Http\Resources\StaticChainResource;
 use App\Models\Generation;
 use App\Models\Pokemon;
 use App\Models\Species;
@@ -16,6 +17,11 @@ class GuestController extends Controller
 
     public function generationListing (Generation $generation) {
         return view('generation.index');
+    }
+
+    public function pokemonChain (Species $species) {
+        $species->load(['pokemon.images']);
+        return StaticChainResource::make($species);
     }
 
     public function pokemonDetail (Species $species) {

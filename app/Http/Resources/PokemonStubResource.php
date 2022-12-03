@@ -24,6 +24,7 @@ class PokemonStubResource extends JsonResource
                 $this->whenAppended(
                     'forward',
                     $this->species->next->map->species->map->pokemon->flatten()
+                        ->where('is_default', true)
                     ->merge($this->extraEvolvesTo->pluck('foreign'))
                     ->diff($this->removesEvolvesTo->pluck('foreign'))
                 )

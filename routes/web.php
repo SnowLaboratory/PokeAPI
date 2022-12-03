@@ -25,6 +25,8 @@ Route::get('/generation/{generation:name}', [GuestController::class, 'generation
 
 Route::get('/pokemon/{species:name}', [GuestController::class, 'pokemonDetail'])->name('species');
 
+Route::get('/chain/{species:name}', [GuestController::class, 'pokemonChain'])->name('chain');
+
 Route::get('/example', [ExampleController::class, 'speciesDetailsFakeData']);
 
 Route::get('/example/{species}', [ExampleController::class, 'speciesDetailsLiveData']);
