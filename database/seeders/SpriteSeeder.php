@@ -18,7 +18,7 @@ class SpriteSeeder extends Seeder
     public function run()
     {
         $this->truncate([
-            'sprites'
+            'images',
         ]);
 
         $api = new EndpointBuilder();

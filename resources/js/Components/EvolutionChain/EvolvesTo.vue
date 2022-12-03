@@ -3,7 +3,7 @@
 import EvolutionLayout from "@/Components/EvolutionChain/EvolutionLayout.vue";
 
 const props = defineProps({
-    species: {
+    variation: {
         type: Object,
     },
 
@@ -15,8 +15,6 @@ const props = defineProps({
 </script>
 
 <template>
-    <div>
-        <EvolutionLayout :species="species" />
-        <EvolvesTo v-for="evolution in evolvesTo" :species="evolution.species" :evolvesTo="evolution.evolvesTo" />
-    </div>
+    <EvolutionLayout :variation="variation" />
+    <EvolvesTo v-for="variation in evolvesTo" :variation="variation" :evolvesTo="variation.evolvesTo" />
 </template>

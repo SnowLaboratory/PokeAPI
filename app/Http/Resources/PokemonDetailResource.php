@@ -18,6 +18,7 @@ class PokemonDetailResource extends JsonResource
             $this->mergeWhen($request->boolean('glue'), $this->glueResourceHelpers()),
             "is_default" => $this->is_default,
             "name" => $this->name,
+            "species" => $this->species->name,
             "weight" => $this->weight,
             "height" => $this->height,
             "formatted_name" => str($this->name)->headline()->value(),

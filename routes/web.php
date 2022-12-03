@@ -23,7 +23,7 @@ Route::get('/', [GuestController::class, 'landingPage']);
 
 Route::get('/generation/{generation:name}', [GuestController::class, 'generationListing']);
 
-Route::get('/pokemon/{species:name}', [GuestController::class, 'pokemonDetail']);
+Route::get('/pokemon/{species:name}', [GuestController::class, 'pokemonDetail'])->name('species');
 
 Route::get('/example', [ExampleController::class, 'speciesDetailsFakeData']);
 

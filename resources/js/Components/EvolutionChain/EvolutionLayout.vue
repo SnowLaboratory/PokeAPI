@@ -1,7 +1,9 @@
 <script setup>
 
+import { Link } from '@inertiajs/inertia-vue3';
+
 const props = defineProps({
-    species: {
+    variation: {
         type: Object,
     },
 });
@@ -9,11 +11,15 @@ const props = defineProps({
 </script>
 
 <template>
-    <div class="w-1/3 p-3 text-center" v-if="species">
-        <img
-            class="max-w-[5rem] mx-auto"
-            :src="species.pokemon.images[0].url"
-        />
-        <span class="text-center"> {{ species.name }}</span>
-    </div>
+    <Link :href="route('species', {species: variation.species})" class="block w-36 h-36 relative" v-if="variation">
+        <div class="absolute inset-0 flex items-center justify-center">
+            <div class="text-center">
+                <img
+                    class="w-20 mx-auto"
+                    :src="variation.images[0].url"
+                />
+                <span>{{ variation.name }}</span>
+            </div>
+        </div>
+    </Link>
 </template>
