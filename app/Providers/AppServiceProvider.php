@@ -26,19 +26,32 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        Response::macro('resource', function ($view, JsonResource $resource) {
+        Response::macro('singleResource', function ($view, JsonResource $resource) {
             return request()->expectsJson() || request()->boolean('json')
                 ? $resource
                 : view($view, (array)json_decode($resource->toJson()));
         });
 
-        Inertia::macro('resource', function ($view, JsonResource $resource) {
+        Response::macro('resource', function ($view, array|JsonResource $data) {
+            if ($data instanceof JsonResource) return $this->singleResource($view, $data);
+            return request()->expectsJson() || request()->boolean('json')
+                ? $data
+                : view($view, $data);
+        });
+
+        Inertia::macro('singleResource', function ($view, JsonResource $resource) {
             return request()->expectsJson() || request()->boolean('json')
                 ? $resource
                 : $this->render($view, [
                     "{$resource->getTable()}" => (array)json_decode($resource->toJson())
                 ]);
-            // dd($this);
+        });
+
+        Inertia::macro('resource', function ($view, array|JsonResource $data) {
+            if ($data instanceof JsonResource) return $this->singleResource($view, $data);
+            return request()->expectsJson() || request()->boolean('json')
+                ? $data
+                : $this->render($view, $data);
         });
     }
 }

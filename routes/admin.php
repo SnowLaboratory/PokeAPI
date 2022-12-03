@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\SpeciesController;
 use App\Http\Controllers\ExampleController;
 use App\Http\Controllers\GenerationController;
 use App\Http\Controllers\GlueController;
@@ -25,3 +26,5 @@ Route::post('/glue/names', [GlueController::class, 'names'])->name('glue.names')
 Route::post('/glue/fetch', [GlueController::class, 'fetch'])->name('glue.fetch');
 Route::post('/glue/save', [GlueController::class, 'save'])->name('glue.save');
 
+
+Route::resource('species', SpeciesController::class);
