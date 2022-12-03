@@ -14,4 +14,16 @@ class Glue extends Model
     public $timestamps = false;
 
     public $table = 'glue';
+
+    public $casts = [
+        'data' => 'array',
+    ];
+
+    public function base() {
+        return $this->morphTo('base');
+    }
+
+    public function foreign() {
+        return $this->morphTo('foreign');
+    }
 }

@@ -16,8 +16,11 @@ class ForwardChainResource extends JsonResource
     {
         return [
             $this->mergeWhen($request->boolean('glue'), $this->glueResourceHelpers()),
-            'species' => SpeciesResource::make($this->species),
-            'evolvesTo' => static::collection($this->species->next),
+            // 'pokemon' => PokemonStubResource::make($this),
+            $this->merge(PokemonStubResource::make($this->append('forward')))
+            // 'evolvesTo' => static::collection($this->species->next),
+            // ...$this->extra(),
         ];
     }
+
 }

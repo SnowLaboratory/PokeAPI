@@ -25,11 +25,7 @@ const props = defineProps({
 //     return typeof o === 'object' && !Array.isArray(o) && o !== null
 // }
 
-const canGlue = o => {
-    return _.isObject(o)
-        && '#id' in o
-        && '#class' in o
-}
+
 
 const isChecked = ref(false)
 

@@ -2,6 +2,8 @@
 
 namespace App\Traits;
 
+use App\Models\Glue;
+
 trait InteractsWithGlue {
 
     public function glueResourceHelpers() : array {
@@ -11,4 +13,13 @@ trait InteractsWithGlue {
         ];
     }
 
+    public function glue() {
+        return $this->morphMany(Glue::class, 'base');
+    }
+
+    public function gluedWith($name) {
+        return $this->morphMany(Glue::class, 'base')
+            ->with('foreign')
+            ->where('name', $name);
+    }
 }

@@ -16,8 +16,9 @@ class BackwardChainResource extends JsonResource
     {
         return [
             $this->mergeWhen($request->boolean('glue'), $this->glueResourceHelpers()),
-            'species' => SpeciesResource::make($this->species),
-            'evolvesFrom' => static::collection($this->species->previous),
+            // 'species' => SpeciesResource::make($this->species),
+            // 'evolvesFrom' => static::collection($this->species->previous),
+            $this->merge(PokemonStubResource::make($this->append('backward')))
         ];
     }
 }

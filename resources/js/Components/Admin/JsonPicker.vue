@@ -26,6 +26,12 @@ const json = ref(null);
 //     })
 // }
 
+const canGlue = o => {
+    return _.isObject(o)
+        && '#id' in o
+        && '#class' in o
+}
+
 const getJson = () => {
     json.value = null
     if (!(url.value.length > 3)) return
@@ -60,11 +66,15 @@ const props = defineProps({
     }
 })
 
+const vm = getCurrentInstance();
+
 const handleCheck = (e, value) => {
-    Array.from(document.querySelectorAll('.object-wrapper')).forEach(
-        node => node.classList.remove('bg-gray-100')
+    const className = 'selected-block'
+    console.log(vm)
+    Array.from(document.querySelectorAll(`.object-wrapper${vm.uid}`)).forEach(
+        node => node.classList.remove(className)
     )
-    e.target.parentNode.parentNode.classList.add('bg-gray-100')
+    e.target.parentNode.parentNode.classList.add(className)
     model.value = value
     emit('selected', value)
 }
@@ -87,9 +97,9 @@ const isChecked = (id, className) => {
         <div v-if="json" class="w-full overflow-scroll border whitespace-pre -mt-1 p-3 h-96 json-picker leading-8 text-[0.7rem] select-none">
             <JsonBlock :obj="json">
                 <template #block="{label, value, grouping}">
-                    <template v-if="grouping">
-                        <div class="mr-2">
-                            <input type="radio" :name="`json_picker_${getCurrentInstance().uid}`" @input="handleCheck($event, value)"/>
+                    <template v-if="(grouping)">
+                        <div class="mr-2" v-if="canGlue(value)">
+                            <input type="radio" :name="`json_picker_${vm.uid}`" @input="handleCheck($event, value)"/>
                         </div>
                         <JsonKey class="mr-2">{{ label }}</JsonKey>
                     </template>
@@ -101,7 +111,7 @@ const isChecked = (id, className) => {
                     </template>
                 </template>
                 <template #group="{label, value, block, group:oldGroup, isArray, isNull}">
-                    <div class="flex items-start object-wrapper">
+                    <div :class="['flex items-start', `object-wrapper${vm.uid}`]">
                         <component :is="block" :label="label" :value="value" :grouping="true" />
 
                         <div>
@@ -133,3 +143,13 @@ const isChecked = (id, className) => {
     </form>
 
 </template>
+
+<style>
+    .selected-block {
+        @apply relative;
+    }
+    .selected-block::before {
+        content: '';
+        @apply absolute inset-y-0 -left-full -right-full bg-gray-100 -z-10;
+    }
+</style>

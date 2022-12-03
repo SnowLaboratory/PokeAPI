@@ -21,6 +21,17 @@ class PokemonDetailResource extends JsonResource
             "weight" => $this->weight,
             "height" => $this->height,
             "formatted_name" => str($this->name)->headline()->value(),
+            'evolvesTo' => ForwardChainResource::collection(
+                $this->species->next->map->species->map->pokemon->flatten()
+                ->merge($this->extraEvolvesTo->pluck('foreign'))
+                ->diff($this->removesEvolvesTo->pluck('foreign'))
+            ),
+            'evolvesFrom' => BackwardChainResource::collection(
+                $this->species->previous->map->species->map->pokemon->flatten()
+                ->merge($this->extraEvolvesFrom->pluck('foreign'))
+                ->diff($this->removesEvolvesFrom->pluck('foreign'))
+            ),
+            // 'evolvesFrom' => BackwardChainResource::collection($this->species->previous),
             ...$this->getImages(),
             // "stats" => [],
             // "sprites" => [],

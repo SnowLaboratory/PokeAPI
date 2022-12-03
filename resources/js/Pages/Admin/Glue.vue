@@ -1,6 +1,6 @@
 <script setup>
 import axios from 'axios';
-import { ref, computed } from 'vue';
+import { ref, computed, watch } from 'vue';
 import JsonPicker from '@/Components/Admin/JsonPicker.vue';
 import { useForm } from '@inertiajs/inertia-vue3';
 import { Combobox, ComboboxInput, ComboboxOptions, ComboboxOption } from '@headlessui/vue';
@@ -75,6 +75,12 @@ const submitGlueJson = () => {
     }
 }
 
+watch(typedName, (oldValue, newValue) => {
+    if (oldValue) {
+        fetchGlueJson()
+    }
+})
+
 
 
 </script>
@@ -89,32 +95,35 @@ const submitGlueJson = () => {
         </div>
 
         <div>Glue Name</div>
-        <div class="flex space-x-3">
+        <div class="flex space-x-3 w-full">
             <Combobox v-model="selectedName">
-                <div class="relative">
-                    <ComboboxInput ref="comboboxInput" @change.stop="changeInput"/>
-                    <ComboboxOptions class="absolute">
+                <div class="relative flex-grow">
+                    <ComboboxInput ref="comboboxInput" class="w-full" @change.stop="changeInput"/>
+                    <ComboboxOptions class="absolute inset-x-0 top-full border border-gray-400 z-10 shadow rounded">
                         <ComboboxOption
                             v-for="name in names"
                             :value="name"
+                            class="p-2 bg-white hover:bg-gray-100 cursor-pointer"
                         >
                             {{ name }}
                         </ComboboxOption>
                     </ComboboxOptions>
                 </div>
             </Combobox>
-            <button class="bg-slate-900 rounded px-3 py-1 text-white" @click.prevent="fetchGlueJson">Select Name</button>
+            <div>
+                <button class="bg-slate-900 rounded px-3 py-1 text-white" @click.prevent="fetchGlueJson">Edit</button>
+            </div>
 
         </div>
 
 
 
-        <div class="mt-8">
+        <div class="mt-8 w-full">
             <div>Glue JSON</div>
-            <textarea v-model="form.json"></textarea>
+            <textarea class="w-full" rows="7" v-model="form.json"></textarea>
         </div>
 
-        <button class="bg-slate-900 rounded px-3 py-1 text-white" @click.prevent="submitGlueJson">Save</button>
+        <button class="bg-slate-900 rounded px-3 py-1 text-white float-right" @click.prevent="submitGlueJson">Save</button>
 
     </div>
 </template>

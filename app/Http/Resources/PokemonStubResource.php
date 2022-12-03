@@ -19,6 +19,22 @@ class PokemonStubResource extends JsonResource
             $this->mergeWhen($request->boolean('glue'), $this->glueResourceHelpers()),
             "name" => $this->name,
             "images" => ImageResource::collection($this->images),
+            'evolvesTo' => ForwardChainResource::collection(
+                $this->whenAppended(
+                    'forward',
+                    $this->species->next->map->species->map->pokemon->flatten()
+                    ->merge($this->extraEvolvesTo->pluck('foreign'))
+                    ->diff($this->removesEvolvesTo->pluck('foreign'))
+                )
+            ),
+            'evolvesFrom' => BackwardChainResource::collection(
+                $this->whenAppended(
+                    'backward',
+                    $this->species->previous->map->species->map->pokemon->flatten()
+                    ->merge($this->extraEvolvesFrom->pluck('foreign'))
+                    ->diff($this->removesEvolvesFrom->pluck('foreign'))
+                )
+            ),
         ];
     }
 }

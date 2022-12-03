@@ -59,8 +59,27 @@ class Pokemon extends Model implements Glue
         return $this->belongsToMany(Gender::class);
     }
 
-    public function evolutionChains()
-    {
-        return $this->hasMany(EvolutionChain::class);
+    public function species() {
+        return $this->belongsTo(Species::class);
+    }
+
+    public function extraEvolvesTo () {
+        return $this->gluedWith('extraEvolvesTo')
+            ->with('foreign');
+    }
+
+    public function removesEvolvesTo () {
+        return $this->gluedWith('removesEvolvesTo')
+            ->with('foreign');
+    }
+
+    public function extraEvolvesFrom () {
+        return $this->gluedWith('extraEvolvesFrom')
+            ->with('foreign');
+    }
+
+    public function removesEvolvesFrom () {
+        return $this->gluedWith('removesEvolvesFrom')
+            ->with('foreign');
     }
 }
