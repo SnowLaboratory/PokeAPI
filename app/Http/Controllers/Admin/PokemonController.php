@@ -3,12 +3,12 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Http\Resources\Admin\Species\SpeciesResource;
-use App\Models\Species;
+use App\Http\Resources\Admin\Pokemon\PokemonResource;
+use App\Models\Pokemon;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
-class SpeciesController extends Controller
+class PokemonController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -17,9 +17,9 @@ class SpeciesController extends Controller
      */
     public function index()
     {
-        return Inertia::resource('Admin/Species/Index', [
-            'species' => SpeciesResource::collection(
-                Species::paginate()
+        return Inertia::resource('Admin/Pokemon/Index', [
+            'pokemon' => PokemonResource::collection(
+                Pokemon::paginate()
             )
         ]);
     }
@@ -31,11 +31,7 @@ class SpeciesController extends Controller
      */
     public function create()
     {
-        return Inertia::resource('Admin/Species/Create', [
-            'species' => SpeciesResource::collection(
-                Species::paginate()
-            )
-        ]);
+        //
     }
 
     /**

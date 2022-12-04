@@ -47,7 +47,7 @@ class AppServiceProvider extends ServiceProvider
                 ]);
         });
 
-        Inertia::macro('resource', function ($view, array|JsonResource $data) {
+        Inertia::macro('resource', function ($view, array|JsonResource $data=[]) {
             if ($data instanceof JsonResource) return $this->singleResource($view, $data);
             return request()->expectsJson() || request()->boolean('json')
                 ? $data

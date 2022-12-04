@@ -6,7 +6,7 @@ import AdminLayout from '@/Layouts/AdminLayout.vue'
 <template>
     <AdminLayout>
         <div v-for="i in 100">
-            Hello Species
+            Hello Pokemon
         </div>
     </AdminLayout>
 </template>

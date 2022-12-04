@@ -1,5 +1,8 @@
 <?php
 
+use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\ItemController;
+use App\Http\Controllers\Admin\PokemonController;
 use App\Http\Controllers\Admin\SpeciesController;
 use App\Http\Controllers\ExampleController;
 use App\Http\Controllers\GenerationController;
@@ -27,4 +30,8 @@ Route::post('/glue/fetch', [GlueController::class, 'fetch'])->name('glue.fetch')
 Route::post('/glue/save', [GlueController::class, 'save'])->name('glue.save');
 
 
+Route::get('/', [DashboardController::class, 'dashboard'])->name('dashboard');
+
 Route::resource('species', SpeciesController::class);
+Route::resource('pokemon', PokemonController::class);
+Route::resource('items', ItemController::class);
