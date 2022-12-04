@@ -2,7 +2,7 @@
 import Button from '@/Components/Admin/Button.vue'
 
 const props = defineProps({
-    'heading': {
+    'label': {
         type: String,
         default: 'Heading'
     }
@@ -13,14 +13,12 @@ const props = defineProps({
 <template>
     <div class="flex justify-between items-end border-b border-gray-500 h-12 pb-2">
         <h1 class="text-lg font-bold leading-none h-10 flex items-end">
-            <slot name="heading">
-                {{ heading }}
+            <slot name="label">
+                {{ label }}
             </slot>
         </h1>
         <div class="flex items-center">
-            <slot>
-                <Button primary>Add</Button>
-            </slot>
+            <slot></slot>
         </div>
 
     </div>

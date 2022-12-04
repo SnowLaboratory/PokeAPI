@@ -98,7 +98,7 @@ const isCurrent = (check) => route().current(check);
                 </Breadcrumbs>
 
                 <slot name="heading">
-                    <Heading :heading="crumbs.slice(-2).join(' ')" />
+                    <Heading :label="crumbs.slice(-2).join(' ')" />
                 </slot>
 
                 <div class="py-3">
