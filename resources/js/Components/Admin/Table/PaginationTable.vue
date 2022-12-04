@@ -101,7 +101,7 @@ const meta = computed(() => props.rows.meta)
 
         </div>
         <div class="text-right">
-            {{ meta.current_page * meta.per_page }} of {{ meta.total }}
+            {{ meta.to }} of {{ meta.total }}
         </div>
     </div>
 

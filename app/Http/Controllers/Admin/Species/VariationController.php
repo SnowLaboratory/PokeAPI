@@ -1,26 +1,27 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers\Admin\Species;
 
 use App\Http\Controllers\Controller;
-use App\Http\Resources\Admin\Species\SpeciesResource;
+use App\Http\Resources\Admin\Pokemon\PokemonResource;
 use App\Models\Species;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
-class SpeciesController extends Controller
+class VariationController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Species $species)
     {
-        return Inertia::resource('Admin/Species/Index', [
-            'species' => SpeciesResource::collection(
-                Species::withCount('pokemon')
-                    ->paginate()
+        return Inertia::resource('Admin/Pokemon/Index', [
+            'pokemon' => PokemonResource::collection(
+                $species->pokemon()
+                ->with('species')
+                ->paginate()
             )
         ]);
     }
@@ -32,11 +33,7 @@ class SpeciesController extends Controller
      */
     public function create()
     {
-        return Inertia::resource('Admin/Species/Create', [
-            'species' => SpeciesResource::collection(
-                Species::paginate()
-            )
-        ]);
+        //
     }
 
     /**
