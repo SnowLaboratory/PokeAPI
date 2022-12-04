@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin\Species;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Species\Pokemon\CreatePokemonRequest;
 use App\Http\Resources\Admin\Pokemon\PokemonResource;
 use App\Http\Resources\Admin\Species\Pokemon\VariationResource;
 use App\Http\Resources\Admin\Species\SpeciesResource;
@@ -48,9 +49,15 @@ class VariationController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(CreatePokemonRequest $request, Species $species)
     {
-        //
+        $species->pokemon()->create($request->safe()->only([
+            'name',
+            'weight',
+            'height',
+            'is_default',
+        ]));
+        return back()->with('success', 'Created Pokemon successfully');
     }
 
     /**
