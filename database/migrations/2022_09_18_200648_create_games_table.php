@@ -18,11 +18,19 @@ return new class extends Migration
         Schema::create('games', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+
+            // do not delete, used for admin features!
+            $table->timestamps();
+            $table->softDeletes();
         });
 
         Schema::create('game_pokemon', function (Blueprint $table) {
             $table->foreignIdFor(Pokemon::class)->references('id')->on('pokemon')->onDelete('cascade');
             $table->foreignIdFor(Game::class)->onDelete('cascade');
+
+            // do not delete, used for admin features!
+            $table->timestamps();
+            $table->softDeletes();
         });
     }
 

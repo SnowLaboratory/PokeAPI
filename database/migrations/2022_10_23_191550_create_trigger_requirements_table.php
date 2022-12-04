@@ -22,6 +22,10 @@ return new class extends Migration
             $table->dateTime('time_value')->nullable();
             $table->foreignIdFor(EvolutionPath::class)->nullable();
             $table->nullableMorphs('model');
+
+            // do not delete, used for admin features!
+            $table->timestamps();
+            $table->softDeletes();
         });
     }
 

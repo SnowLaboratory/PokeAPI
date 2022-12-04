@@ -18,11 +18,19 @@ return new class extends Migration
         Schema::create('abilities', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+
+            // do not delete, used for admin features!
+            $table->timestamps();
+            $table->softDeletes();
         });
 
         Schema::create('ability_pokemon', function (Blueprint $table) {
             $table->foreignIdFor(Pokemon::class);
             $table->foreignIdFor(Ability::class);
+
+            // do not delete, used for admin features!
+            $table->timestamps();
+            $table->softDeletes();
         });
     }
 

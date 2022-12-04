@@ -19,6 +19,10 @@ return new class extends Migration
             $table->foreignIdFor(Pokemon::class)->nullable();
             $table->string('storage_url')->nullable();
             $table->string('api_url')->nullable();
+
+            // do not delete, used for admin features!
+            $table->timestamps();
+            $table->softDeletes();
         });
     }
 

@@ -16,6 +16,10 @@ return new class extends Migration
         Schema::create('moves', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+
+            // do not delete, used for admin features!
+            $table->timestamps();
+            $table->softDeletes();
         });
     }
 

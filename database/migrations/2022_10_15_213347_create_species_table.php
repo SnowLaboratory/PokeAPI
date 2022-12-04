@@ -23,6 +23,10 @@ return new class extends Migration
             $table->integer('capture_rate');
             $table->boolean('is_legendary');
             $table->boolean('is_mythical');
+
+            // do not delete, used for admin features!
+            $table->timestamps();
+            $table->softDeletes();
         });
     }
 

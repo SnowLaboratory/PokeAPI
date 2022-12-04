@@ -13,10 +13,15 @@ use App\Models\Pivot\PokedexEntry;
 use App\Traits\HasManyThroughSelf;
 use App\Traits\InteractsWithGlue;
 use App\Traits\NameLookup;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Species extends Model implements Glue
 {
-    use HasFactory, NameLookup, HasManyThroughSelf, InteractsWithGlue;
+    use HasFactory,
+     NameLookup,
+     HasManyThroughSelf,
+     InteractsWithGlue,
+     SoftDeletes;
 
     protected $guarded = [];
 

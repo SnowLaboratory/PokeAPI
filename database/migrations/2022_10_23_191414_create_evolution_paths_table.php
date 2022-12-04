@@ -20,6 +20,10 @@ return new class extends Migration
             $table->id();
             $table->foreignIdFor(Trigger::class)->nullable();
             $table->foreignIdFor(EvolutionChain::class)->nullable();
+
+            // do not delete, used for admin features!
+            $table->timestamps();
+            $table->softDeletes();
         });
     }
 

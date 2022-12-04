@@ -26,6 +26,10 @@ return new class extends Migration
 
             $table->bigInteger('evolveFrom')->unsigned()->nullable();
             $table->foreign('evolveFrom')->references('id')->on('evolution_chains');
+
+            // do not delete, used for admin features!
+            $table->timestamps();
+            $table->softDeletes();
         });
     }
 

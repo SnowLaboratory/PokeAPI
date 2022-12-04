@@ -19,11 +19,19 @@ return new class extends Migration
             $table->string('name');
             $table->integer('base_stat');
             $table->integer('effort');
+
+            // do not delete, used for admin features!
+            $table->timestamps();
+            $table->softDeletes();
         });
 
         Schema::create('has_stats', function (Blueprint $table) {
             $table->foreignIdFor(Stat::class);
             $table->morphs('model');
+
+            // do not delete, used for admin features!
+            $table->timestamps();
+            $table->softDeletes();
         });
     }
 

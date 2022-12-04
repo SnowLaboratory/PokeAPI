@@ -19,12 +19,19 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->integer('rate');
+
+            // do not delete, used for admin features!
+            $table->timestamps();
+            $table->softDeletes();
         });
 
         Schema::create('gender_pokemon', function (Blueprint $table) {
             $table->foreignIdFor(Pokemon::class);
             $table->foreignIdFor(Gender::class);
 
+            // do not delete, used for admin features!
+            $table->timestamps();
+            $table->softDeletes();
         });
     }
 

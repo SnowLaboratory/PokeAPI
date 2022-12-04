@@ -18,11 +18,19 @@ return new class extends Migration
             $table->id();
             $table->string('storage_url')->nullable();
             $table->string('api_url')->nullable();
+
+            // do not delete, used for admin features!
+            $table->timestamps();
+            $table->softDeletes();
         });
 
         Schema::create('has_images', function (Blueprint $table) {
             $table->foreignIdFor(Image::class);
             $table->morphs('model');
+
+            // do not delete, used for admin features!
+            $table->timestamps();
+            $table->softDeletes();
         });
     }
 

@@ -21,6 +21,10 @@ return new class extends Migration
             $table->integer('height');
             $table->boolean('is_default');
             $table->foreignIdFor(Species::class)->nullable();
+
+            // do not delete, used for admin features!
+            $table->timestamps();
+            $table->softDeletes();
         });
     }
 

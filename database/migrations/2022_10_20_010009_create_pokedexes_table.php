@@ -21,12 +21,20 @@ return new class extends Migration
             $table->foreignIdFor(Region::class)->nullable();
             $table->string('name');
             $table->boolean(('is_main_series'));
+
+            // do not delete, used for admin features!
+            $table->timestamps();
+            $table->softDeletes();
         });
 
         Schema::create('pokedex_species', function (Blueprint $table) {
             $table->foreignIdfor(Pokedex::class)->nullable();
             $table->foreignIdFor(Species::class)->nullable();
             $table->integer('entry_number');
+
+            // do not delete, used for admin features!
+            $table->timestamps();
+            $table->softDeletes();
         });
 
     }

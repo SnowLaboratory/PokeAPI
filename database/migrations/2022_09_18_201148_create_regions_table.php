@@ -21,6 +21,10 @@ return new class extends Migration
             $table->id();
             $table->foreignIdFor(Generation::class)->nullable();
             $table->string('name');
+
+            // do not delete, used for admin features!
+            $table->timestamps();
+            $table->softDeletes();
         });
 
         // Schema::create('region_release', function (Blueprint $table) {

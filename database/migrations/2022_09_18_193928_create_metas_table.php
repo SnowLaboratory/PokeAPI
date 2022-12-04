@@ -18,11 +18,19 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->json('value');
+
+            // do not delete, used for admin features!
+            $table->timestamps();
+            $table->softDeletes();
         });
 
         Schema::create('has_metas', function (Blueprint $table) {
             $table->foreignIdFor(Meta::class);
             $table->morphs('model');
+
+            // do not delete, used for admin features!
+            $table->timestamps();
+            $table->softDeletes();
         });
     }
 
