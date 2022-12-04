@@ -52,54 +52,54 @@ const isCurrent = (check) => route().current(check);
                     <div class="text-xl font-bold px-3 h-12 flex items-center">PokeDB</div>
                     <slot name="navigation">
                         <Navigation class="mt-[1rem]">
-                            <Link :href="route('admin.dashboard')"
-                                :class="{'active': isCurrent('admin.dashboard')}"
-                                >Dashboard</Link>
+                            <Link :href="route('admin.dashboard')" :class="{ 'active': isCurrent('admin.dashboard') }">
+                            Dashboard</Link>
                             <Link :href="route('admin.species.index')"
-                                :class="{'active': isCurrent('admin.species.*')}"
-                                >Species</Link>
+                                :class="{ 'active': isCurrent('admin.species.*') }">Species</Link>
                             <Link :href="route('admin.pokemon.index')"
-                                :class="{'active': isCurrent('admin.pokemon.*')}"
-                                >Pokemon</Link>
-                            <Link :href="route('admin.items.index')"
-                                :class="{'active': isCurrent('admin.items.*')}"
-                                >Items</Link>
+                                :class="{ 'active': isCurrent('admin.pokemon.*') }">Pokemon</Link>
+                            <Link :href="route('admin.items.index')" :class="{ 'active': isCurrent('admin.items.*') }">
+                            Items</Link>
                         </Navigation>
                     </slot>
                 </nav>
             </div>
-            <main class="w-full max-w-screen-md bg-white p-6">
-                <Breadcrumbs class="text-sm h-12 mb-[1px]">
-                    <Breadcrumb v-for="(crumb, index) in crumbs.slice(0,-1)" class="flex items-center relative">
-                        <Link :href="getRoute(index + 1, route().params)" class="text-blue-600 hover:underline">
+            <main class="w-full max-w-screen-lg bg-white px-6 pb-6">
+                <div class="sticky top-0 bg-white pt-6 z-20">
+                    <Breadcrumbs class="text-sm h-12 mb-[1px]">
+                        <Breadcrumb v-for="(crumb, index) in crumbs.slice(0, -1)" class="flex items-center relative">
+                            <Link :href="getRoute(index + 1, route().params)" class="text-blue-600 hover:underline">
                             {{ crumb }}
-                        </Link>
-                        <Menu v-if="props.options[crumb]">
-                            <MenuButton>
-                                <div class="p-[0.1rem] border border-gray-100 hover:bg-gray-100">
-                                    <ChevronDownIcon class="w-3"/>
-                                </div>
+                            </Link>
+                            <Menu v-if="props.options[crumb]">
+                                <MenuButton>
+                                    <div class="p-[0.1rem] border border-gray-100 hover:bg-gray-100">
+                                        <ChevronDownIcon class="w-3" />
+                                    </div>
 
-                            </MenuButton>
-                            <MenuItems class="absolute inset-x-0 top-full">
-                                <div class=" bg-white z-10 border rounded">
-                                    <MenuItem v-for="(route, routeName) in props.options[crumb]">
-                                        <Link :href="route" class="block px-3 py-1 hover:bg-gray-100" v-show="(routeName != ending)">
-                                            {{ routeName }}
+                                </MenuButton>
+                                <MenuItems class="absolute inset-x-0 top-full">
+                                    <div class=" bg-white z-10 border rounded">
+                                        <MenuItem v-for="(route, routeName) in props.options[crumb]">
+                                        <Link :href="route" class="block px-3 py-1 hover:bg-gray-100"
+                                            v-show="(routeName != ending)">
+                                        {{ routeName }}
                                         </Link>
-                                    </MenuItem>
-                                </div>
-                            </MenuItems>
-                        </Menu>
-                    </Breadcrumb>
-                    <Breadcrumb v-if="crumbs.length > 1">
-                        {{ ending }}
-                    </Breadcrumb>
-                </Breadcrumbs>
+                                        </MenuItem>
+                                    </div>
+                                </MenuItems>
+                            </Menu>
+                        </Breadcrumb>
+                        <Breadcrumb v-if="crumbs.length > 1">
+                            {{ ending }}
+                        </Breadcrumb>
+                    </Breadcrumbs>
 
-                <slot name="heading">
-                    <Heading :label="crumbs.slice(-2).join(' ')" />
-                </slot>
+                    <slot name="heading">
+                        <Heading :label="crumbs.slice(-2).join(' ')" />
+                    </slot>
+                </div>
+
 
                 <div class="py-3">
                     <slot></slot>
