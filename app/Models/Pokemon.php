@@ -7,13 +7,14 @@ use App\Traits\HasCategories;
 use App\Traits\HasImages;
 use App\Traits\HasStats;
 use App\Traits\InteractsWithGlue;
+use App\Traits\NameLookup;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Pokemon extends Model implements Glue
 {
-    use HasFactory, HasStats, HasCategories, HasImages, InteractsWithGlue;
+    use HasFactory, HasStats, HasCategories, HasImages, InteractsWithGlue, NameLookup;
 
     protected $guarded = [];
 

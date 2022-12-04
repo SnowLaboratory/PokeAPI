@@ -1,5 +1,4 @@
 <script setup>
-import { computed } from "vue";
 import Card from "@/Components/Card.vue";
 import Container from "@/Components/Container.vue";
 import Variation from "@/Components/Variation/Variation.vue";

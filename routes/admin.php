@@ -41,5 +41,7 @@ Route::controller(SpeciesController::class)
         Route::resource('{species}/pokemon', VariationController::class);
     });
 
-Route::resource('pokemon', PokemonController::class);
+Route::resource('pokemon', PokemonController::class, [
+    'only' => ['index'],
+]);
 Route::resource('items', ItemController::class);

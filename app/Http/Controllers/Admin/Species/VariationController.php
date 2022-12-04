@@ -4,7 +4,9 @@ namespace App\Http\Controllers\Admin\Species;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Admin\Pokemon\PokemonResource;
+use App\Http\Resources\Admin\Species\Pokemon\VariationResource;
 use App\Models\Species;
+use App\Models\Pokemon;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -64,9 +66,13 @@ class VariationController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Species $species, Pokemon $pokemon)
     {
-        //
+        return Inertia::resource('Admin/Species/Pokemon/Edit', [
+            'pokemon' => VariationResource::make(
+                $pokemon
+            )
+        ]);
     }
 
     /**
