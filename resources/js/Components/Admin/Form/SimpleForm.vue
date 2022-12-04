@@ -37,7 +37,7 @@ watch(recentlySuccessful, () => {
 
 <form @submit.prevent="$emit('submit', props.form)">
     <slot></slot>
-    <div class="border-t py-3 border-gray-500 flex items-center justify-end space-x-3">
+    <div class="mt-8 border-t py-3 border-gray-500 flex items-center justify-end space-x-3">
         <div class="text-emerald-600 font-medium" v-if="recentlySuccessful">
             Success!
         </div>

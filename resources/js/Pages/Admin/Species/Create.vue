@@ -4,6 +4,7 @@ import Heading from '@/Components/Admin/Heading.vue';
 import SimpleForm from '@/Components/Admin/Form/SimpleForm.vue';
 import { useForm } from '@inertiajs/inertia-vue3';
 import { Inertia } from '@inertiajs/inertia';
+import SimpleInput from '@/Components/Admin/Form/SimpleInput.vue';
 
 const form = useForm({
     name: 'asdf'
@@ -27,7 +28,7 @@ const handleRedirect = () => {
         </template>
 
         <SimpleForm @submit="handleSubmit" @redirect="handleRedirect" :form="form">
-            hello simple form
+            <SimpleInput label="name" v-model="form.name"></SimpleInput>
         </SimpleForm>
 
     </AdminLayout>
