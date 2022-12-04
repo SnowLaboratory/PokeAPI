@@ -5,6 +5,7 @@ import PaginationTable from '@/Components/Admin/Table/PaginationTable.vue';
 import { Link } from '@inertiajs/inertia-vue3';
 import { Inertia } from '@inertiajs/inertia';
 import Button from '@/Components/Admin/Button.vue';
+import { confirm } from '@/Layouts/AdminLayout.vue'
 
 const props = defineProps({
     'pokemon': {
@@ -21,6 +22,14 @@ const columns = {
     'species': {label: 'Species'}
 }
 
+const handleDelete = (pokemon) => {
+    console.log(pokemon);
+    Inertia.delete(route('admin.species.pokemon.destroy', {
+        ...route().params,
+        pokemon: pokemon,
+    }))
+}
+
 const actions = {
     'edit': {
         action(pokemon) {
@@ -30,10 +39,19 @@ const actions = {
             }))
         }
     },
-
     'view': {
         action(pokemon) {
             Inertia.visit(route('species', {species: pokemon.species}))
+        }
+    },
+    'delete': {
+        action(pokemon) {
+            confirm(
+                'Are you sure you want to delete this pokemon?',
+                {
+                    confirm: () => handleDelete(pokemon),
+                }
+            )
         }
     }
 }

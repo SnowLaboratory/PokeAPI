@@ -4,12 +4,13 @@ import { Link, usePage } from '@inertiajs/inertia-vue3';
 import Breadcrumbs from "@/Components/Admin/Breadcrumb/Breadcrumbs.vue";
 import Breadcrumb from "@/Components/Admin/Breadcrumb/Breadcrumb.vue";
 import Heading from "@/Components/Admin/Heading.vue";
-import { computed } from 'vue';
-import { Menu, MenuButton, MenuItems, MenuItem } from '@headlessui/vue';
+import { computed, onMounted, ref } from 'vue';
+import { Menu, MenuButton, MenuItems, MenuItem, DialogTitle } from '@headlessui/vue';
 import { ChevronDownIcon } from '@heroicons/vue/24/outline'
 import Alert from '@/Components/Admin/Alert/Alert.vue';
 import Alerts from '@/Components/Admin/Alert/Alerts.vue';
-
+import Confirm from '@/Components/Admin/Modal/Confirm.vue';
+import { DefaultConfirmOptions } from '@/Components/Admin/Modal/Confirm';
 
 const defaultOptions = {
     'species': {
@@ -18,6 +19,14 @@ const defaultOptions = {
         'edit': detectRelation('admin.species.edit'),
     }
 }
+
+const confirmOptions = ref(DefaultConfirmOptions)
+
+onMounted(() => {
+    window.addEventListener('confirm:settings:change', ({detail}) => {
+        confirmOptions.value = detail
+    })
+})
 
 const props = defineProps({
     crumbs: {
@@ -67,6 +76,32 @@ const messages = computed(() => usePage().props.value.messages);
 <script>
     export const detectRelation = r => () => route(r, route().params)
     export const relationRoute = r => detectRelation(r)()
+
+    export const confirm = (message, actions) => {
+
+        const settings = {
+            ...DefaultConfirmOptions,
+            message: message,
+            open: true,
+        }
+
+        settings.actions.cancel.action = actions.cancel ?? (() => {});
+        settings.actions.confirm.action = actions.confirm ?? (() => {});
+
+        const event = new CustomEvent('confirm:settings:change', {detail: settings})
+        window.dispatchEvent(event)
+    }
+
+    export const confirmRaw = (message, newSettings) => {
+        const settings = {
+            ...confirmOptions.value,
+            message: message,
+            open: true,
+            ...newSettings
+        }
+        const event = new CustomEvent('confirm:settings:change', {detail: settings})
+        window.dispatchEvent(event)
+    }
 </script>
 
 <template>
@@ -157,6 +192,24 @@ const messages = computed(() => usePage().props.value.messages);
                         </Breadcrumb>
                     </Breadcrumbs>
 
+                        <Confirm :open="confirmOptions.open" :modal-class="confirmOptions.modalClass" @close="(confirmOptions.open = false)">
+                            <template #header>
+                                <DialogTitle>{{ confirmOptions.title ?? 'Confirm' }}</DialogTitle>
+                            </template>
+                            <template #actions="{setIsOpen, submitModal}">
+                                <template v-for="(action, actionLabel) in confirmOptions.actions">
+                                    <button
+                                    @click.prevent="actionLabel === 'confirm' ? submitModal(action.action) : setIsOpen(false, action.action)"
+                                        class="py-1 px-3 border rounded font-medium text-sm"
+                                        :class="[action.btnClass]"
+                                    >
+                                        {{ action.label ?? actionLabel }}
+                                    </button>
+                                </template>
+                            </template>
+                            {{ confirmOptions.message }}
+                        </Confirm>
+
                     <slot name="heading">
                         <Heading :label="crumbs.slice(-2).join(' ')" />
                     </slot>
@@ -164,6 +217,7 @@ const messages = computed(() => usePage().props.value.messages);
 
 
                 <div class="py-3">
+                    {{ confirmOptions.open }}
                     <slot></slot>
                 </div>
             </main>
