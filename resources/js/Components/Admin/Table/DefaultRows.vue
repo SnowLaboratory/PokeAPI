@@ -77,7 +77,7 @@ const toggle = (id, data) => {
                                 </Link>
                             </template>
                             <template v-else>
-                                <button @click.prevent="options.action"
+                                <button @click.prevent="options.action(row, index)"
                                     class="w-full text-left block px-3 py-1 hover:bg-yellow-100">
                                     {{ actionName }}
                                 </button>

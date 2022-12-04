@@ -3,6 +3,7 @@ import AdminLayout from '@/Layouts/AdminLayout.vue'
 import Heading from '@/Components/Admin/Heading.vue';
 import PaginationTable from '@/Components/Admin/Table/PaginationTable.vue';
 import { Link } from '@inertiajs/inertia-vue3';
+import { Inertia } from '@inertiajs/inertia';
 
 const props = defineProps({
     'pokemon': {
@@ -15,6 +16,14 @@ const columns = {
     'species': {label: 'Species'}
 }
 
+const actions = {
+    'view': {
+        action(pokemon) {
+            Inertia.visit(route('species', {species: pokemon.species}))
+        }
+    }
+}
+
 </script>
 
 <template>
@@ -23,7 +32,7 @@ const columns = {
             <Heading label="Pokemon" />
         </template>
 
-        <PaginationTable :rows="pokemon" :columns="columns" v-slot="{row}">
+        <PaginationTable :rows="pokemon" :columns="columns" :actions="actions" v-slot="{row}">
             <td class="text-left leading-loose">{{ row.name }}</td>
             <td class="text-left leading-loose">
                 <Link :href="route('admin.species.index')" class="text-sky-600 underline">
