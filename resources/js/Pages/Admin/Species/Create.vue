@@ -24,11 +24,11 @@ const handleRedirect = () => {
 <template>
     <AdminLayout>
         <template #heading>
-            <Heading label="Create Species" />
+            <Heading label="Create Species"/>
         </template>
 
         <SimpleForm @submit="handleSubmit" @redirect="handleRedirect" :form="form">
-            <SimpleInput label="name" v-model="form.name"></SimpleInput>
+            <SimpleInput label="name" v-model="form.name" :error="form.errors.name"></SimpleInput>
         </SimpleForm>
 
     </AdminLayout>

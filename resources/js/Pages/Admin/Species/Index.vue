@@ -4,6 +4,7 @@ import Heading from '@/Components/Admin/Heading.vue';
 import PaginationTable from '@/Components/Admin/Table/PaginationTable.vue';
 import { Link } from '@inertiajs/inertia-vue3';
 import { Inertia } from '@inertiajs/inertia';
+import Button from '@/Components/Admin/Button.vue';
 
 const props = defineProps({
     'species': {
@@ -29,7 +30,11 @@ const actions = {
 <template>
     <AdminLayout>
         <template #heading>
-            <Heading label="Species" />
+            <Heading label="Species">
+                <Button primary :href="route('admin.species.create')">
+                    Create
+                </Button>
+            </Heading>
         </template>
 
         <PaginationTable :rows="species" :columns="columns" :actions="actions" v-slot="{row}">

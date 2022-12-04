@@ -43,7 +43,7 @@ watch(recentlySuccessful, () => {
         </div>
         <button
             @click.prevent="$emit('submit', form)"
-            class="py-1 px-3 font-medium rounded-lg"
+            class="py-1 px-3 font-medium rounded text-sm"
             :class="{
                 'bg-slate-900 text-slate-200 hover:text-white hover:bg-slate-800 cursor-pointer': form.isDirty,
                 'bg-slate-400 text-slate-200': !form.isDirty
@@ -54,7 +54,7 @@ watch(recentlySuccessful, () => {
         </button>
         <button
             @click.prevent="handleRedirect"
-            class="py-1 px-3 font-medium rounded-lg"
+            class="py-1 px-3 font-medium rounded text-sm"
             :class="{
                 'bg-slate-900 text-slate-200 hover:text-white hover:bg-slate-800 cursor-pointer': form.isDirty,
                 'bg-slate-400 text-slate-200': !form.isDirty

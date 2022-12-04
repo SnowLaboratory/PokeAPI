@@ -32,7 +32,7 @@ const props = defineProps({
                     />
             </slot>
         </label>
-        <div class="text-sm" :class="{'text-rose-600': props.error}" v-if="(props.error ?? props.help)">
+        <div class="text-[0.7rem]" :class="{'text-rose-600': props.error}" v-if="(props.error ?? props.help)">
             {{ props.error ?? props.help }}
         </div>
     </div>
