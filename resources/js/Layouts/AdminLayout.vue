@@ -217,7 +217,6 @@ const messages = computed(() => usePage().props.value.messages);
 
 
                 <div class="py-3">
-                    {{ confirmOptions.open }}
                     <slot></slot>
                 </div>
             </main>
