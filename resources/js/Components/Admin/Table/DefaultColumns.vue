@@ -12,5 +12,7 @@ const props = defineProps({
 </script>
 
 <template>
-    <th class="text-left" v-for="(settings, column) in columns">{{ column }}</th>
+    <th class="text-left" v-for="(settings, column) in columns">
+        {{ settings.label ?? column }}
+    </th>
 </template>

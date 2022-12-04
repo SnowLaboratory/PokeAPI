@@ -1,7 +1,13 @@
 <script setup>
 import AdminLayout from '@/Layouts/AdminLayout.vue'
 import Heading from '@/Components/Admin/Heading.vue';
+import PaginationTable from '@/Components/Admin/Table/PaginationTable.vue';
 
+const props = defineProps({
+    'items': {
+        type: Object,
+    }
+})
 </script>
 
 <template>
@@ -9,8 +15,7 @@ import Heading from '@/Components/Admin/Heading.vue';
         <template #heading>
             <Heading label="Items" />
         </template>
-        <div v-for="i in 100">
-            Hello Items
-        </div>
+
+        <PaginationTable :rows="items"/>
     </AdminLayout>
 </template>

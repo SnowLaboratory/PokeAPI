@@ -9,6 +9,8 @@ import SimpleTable from '@/Components/Admin/Table/SimpleTable.vue';
 import DefaultColumns from './DefaultColumns.vue';
 import DefaultRows from './DefaultRows.vue';
 import DefaultContent from './DefaultContent.vue';
+import Card from '@/Components/Admin/Card/Card.vue';
+import Cards from '@/Components/Admin/Card/Cards.vue';
 
 const props = defineProps({
     'rows': {
@@ -40,6 +42,12 @@ const meta = computed(() => props.rows.meta)
 </script>
 
 <template>
+    <Cards class="mb-8">
+        <Card>
+            <div class="text-lg pb-1">Last Edited</div>
+            <div class="text-3xl">10h ago</div>
+        </Card>
+    </Cards>
     <SimpleTable :actions="props.actions" :columns="props.columns" :rows="props.rows.data">
         <template #columns>
             <slot name="columns">

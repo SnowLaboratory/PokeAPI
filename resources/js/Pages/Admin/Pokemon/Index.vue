@@ -1,7 +1,19 @@
 <script setup>
 import AdminLayout from '@/Layouts/AdminLayout.vue'
 import Heading from '@/Components/Admin/Heading.vue';
+import PaginationTable from '@/Components/Admin/Table/PaginationTable.vue';
+import { Link } from '@inertiajs/inertia-vue3';
 
+const props = defineProps({
+    'pokemon': {
+        type: Object,
+    }
+})
+
+const columns = {
+    'name': {label: 'Name'},
+    'species': {label: 'Species'}
+}
 
 </script>
 
@@ -10,8 +22,14 @@ import Heading from '@/Components/Admin/Heading.vue';
         <template #heading>
             <Heading label="Pokemon" />
         </template>
-        <div v-for="i in 100">
-            Hello Pokemon
-        </div>
+
+        <PaginationTable :rows="pokemon" :columns="columns" v-slot="{row}">
+            <td class="text-left leading-loose">{{ row.name }}</td>
+            <td class="text-left leading-loose">
+                <Link :href="route('admin.species.index')" class="text-sky-600 underline">
+                    {{ row.species.name }}
+                </Link>
+            </td>
+        </PaginationTable>
     </AdminLayout>
 </template>

@@ -19,7 +19,8 @@ class PokemonController extends Controller
     {
         return Inertia::resource('Admin/Pokemon/Index', [
             'pokemon' => PokemonResource::collection(
-                Pokemon::paginate()
+                Pokemon::with('species')
+                ->paginate()
             )
         ]);
     }
