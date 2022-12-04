@@ -17,19 +17,26 @@ const props = defineProps({
             'admin': 'dashboard',
         }
     },
+
     options: {
+        type: Object,
+        default: {},
+    },
+
+    breadcrumbOptions: {
         type: Object,
         default: {
             'species': {
                 'index': route('admin.species.index'),
-                'create': route('admin.species.create')
+                'create': route('admin.species.create'),
             }
         }
     }
 })
-
+console.log({breadcrumbOptions:props.breadcrumbOptions, options:props.options});
 const crumbs = computed(() => route().current().split('.'));
-const ending = computed(() => crumbs.value.slice(-1)[0])
+const ending = computed(() => crumbs.value.slice(-1)[0]);
+const options = computed (() => Object.assign(props.breadcrumbOptions, props.options));
 
 const getRoute = (offset, params) => {
     var wantedCrumbs = crumbs.value.slice(0, offset)
@@ -111,7 +118,7 @@ const messages = computed(() => usePage().props.value.messages);
                             <Link :href="getRoute(index + 1, route().params)" class="text-blue-600 hover:underline">
                             {{ crumb }}
                             </Link>
-                            <Menu v-if="props.options[crumb]">
+                            <Menu v-if="options[crumb]">
                                 <MenuButton>
                                     <div class="p-[0.1rem] border border-gray-100 hover:bg-gray-100">
                                         <ChevronDownIcon class="w-3" />
@@ -120,7 +127,7 @@ const messages = computed(() => usePage().props.value.messages);
                                 </MenuButton>
                                 <MenuItems class="absolute inset-x-0 top-full">
                                     <div class=" bg-white z-10 border rounded">
-                                        <MenuItem v-for="(route, routeName) in props.options[crumb]">
+                                        <MenuItem v-for="(route, routeName) in options[crumb]">
                                         <Link :href="route" class="block px-3 py-1 hover:bg-gray-100"
                                             v-show="(routeName != ending)">
                                         {{ routeName }}

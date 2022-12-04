@@ -17,6 +17,15 @@ const columns = {
 }
 
 const actions = {
+    'edit': {
+        action(pokemon) {
+            Inertia.visit(route('admin.species.pokemon.edit', {
+                species: pokemon.species,
+                pokemon: pokemon
+            }))
+        }
+    },
+
     'view': {
         action(pokemon) {
             Inertia.visit(route('species', {species: pokemon.species}))

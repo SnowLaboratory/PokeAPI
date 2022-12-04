@@ -63,9 +63,13 @@ class PokemonController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Pokemon $pokemon)
     {
-        //
+        return Inertia::resource('Admin/Species/Pokemon/Edit', [
+            'pokemon' => PokemonResource::make(
+                $pokemon
+            )
+        ]);
     }
 
     /**

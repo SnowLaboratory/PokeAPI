@@ -8,39 +8,33 @@ import SimpleInput from '@/Components/Admin/Form/SimpleInput.vue';
 import { computed } from 'vue';
 
 const props = defineProps({
-    'pokemon': {
+    'species': {
         type: Object,
         required: true
-    }
+    },
 })
 
-const BreadcrumbOptions = {
-    'species': {
-        'edit': route('admin.species.edit', route().params)
-    }
-}
-
-const pokemon = computed( () => props.pokemon.data)
+const species = computed( () => props.species.data)
 
 const form = useForm({
-    name: pokemon.value.name
+    name: species.value.name
 })
 
 const handleSubmit = () => {
-    form.post(route('admin.species.pokemon.update'))
+    form.post(route('admin.species.update'))
 }
 
 const handleRedirect = () => {
-    Inertia.visit(route('admin.species.pokemon.index'))
+    Inertia.visit(route('admin.species.index'))
 }
 
 
 </script>
 
 <template>
-    <AdminLayout :options="BreadcrumbOptions">
+    <AdminLayout>
         <template #heading>
-            <Heading label="Edit Variation"/>
+            <Heading label="Edit Species"/>
         </template>
 
         <SimpleForm @submit="handleSubmit" @redirect="handleRedirect" :form="form">

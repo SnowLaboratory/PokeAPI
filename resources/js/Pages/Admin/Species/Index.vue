@@ -18,6 +18,12 @@ const columns = {
 }
 
 const actions = {
+    'edit': {
+        action(species) {
+            Inertia.visit(route('admin.species.edit', {species}))
+        }
+    },
+
     'view': {
         action(species) {
             Inertia.visit(route('species', {species}))

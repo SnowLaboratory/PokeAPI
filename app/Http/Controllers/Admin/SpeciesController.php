@@ -68,9 +68,13 @@ class SpeciesController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Species $species)
     {
-        //
+        return Inertia::resource('Admin/Species/Edit', [
+            'species' => SpeciesResource::make(
+                $species
+            )
+        ]);
     }
 
     /**
