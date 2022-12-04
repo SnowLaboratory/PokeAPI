@@ -17,7 +17,7 @@ const props = defineProps({
                 {{ label }}
             </slot>
         </h1>
-        <div class="flex items-center">
+        <div class="flex items-center" id="page-actions">
             <slot></slot>
         </div>
 
