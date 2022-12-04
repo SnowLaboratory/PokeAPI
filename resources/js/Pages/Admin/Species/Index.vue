@@ -1,6 +1,14 @@
 <script setup>
 import AdminLayout from '@/Layouts/AdminLayout.vue'
 import Heading from '@/Components/Admin/Heading.vue';
+import SimpleTable from '@/Components/Admin/Table/SimpleTable.vue';
+
+const props = defineProps({
+    'species': {
+        type: Object,
+    }
+})
+
 
 
 </script>
@@ -10,8 +18,9 @@ import Heading from '@/Components/Admin/Heading.vue';
         <template #heading>
             <Heading label="Species" />
         </template>
-        <div v-for="i in 100">
-            Hello Species
-        </div>
+
+        <SimpleTable :rows="species.data">
+
+        </SimpleTable>
     </AdminLayout>
 </template>
