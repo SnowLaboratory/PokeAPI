@@ -38,15 +38,28 @@ watch(recentlySuccessful, () => {
 <form @submit.prevent="$emit('submit', props.form)">
     <slot></slot>
     <div class="border-t py-3 border-gray-500 flex items-center justify-end space-x-3">
+        <div class="text-emerald-600 font-medium" v-if="recentlySuccessful">
+            Success!
+        </div>
         <button
             @click.prevent="$emit('submit', form)"
-            class="py-1 px-3 bg-slate-900 text-slate-200 hover:text-white font-medium rounded-lg hover:bg-slate-800"
+            class="py-1 px-3 font-medium rounded-lg"
+            :class="{
+                'bg-slate-900 text-slate-200 hover:text-white hover:bg-slate-800 cursor-pointer': form.isDirty,
+                'bg-slate-400 text-slate-200': !form.isDirty
+            }"
+            :disabled="!form.isDirty"
             >
             Save and Continue
         </button>
         <button
             @click.prevent="handleRedirect"
-            class="py-1 px-3 bg-slate-900 text-slate-200 hover:text-white font-medium rounded-lg hover:bg-slate-800"
+            class="py-1 px-3 font-medium rounded-lg"
+            :class="{
+                'bg-slate-900 text-slate-200 hover:text-white hover:bg-slate-800 cursor-pointer': form.isDirty,
+                'bg-slate-400 text-slate-200': !form.isDirty
+            }"
+            :disabled="!form.isDirty"
             >
             Save
         </button>

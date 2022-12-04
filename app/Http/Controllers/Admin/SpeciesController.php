@@ -47,7 +47,7 @@ class SpeciesController extends Controller
      */
     public function store(Request $request)
     {
-        return back();
+        return back()->with('success', 'You created a new species!');
     }
 
     /**

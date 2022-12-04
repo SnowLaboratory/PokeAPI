@@ -1,12 +1,14 @@
 <script setup>
 import Navigation from '@/Components/Admin/Navigation.vue'
-import { Link } from '@inertiajs/inertia-vue3';
+import { Link, usePage } from '@inertiajs/inertia-vue3';
 import Breadcrumbs from "@/Components/Admin/Breadcrumb/Breadcrumbs.vue";
 import Breadcrumb from "@/Components/Admin/Breadcrumb/Breadcrumb.vue";
 import Heading from "@/Components/Admin/Heading.vue";
 import { computed } from 'vue';
 import { Menu, MenuButton, MenuItems, MenuItem } from '@headlessui/vue';
 import { ChevronDownIcon } from '@heroicons/vue/24/outline'
+import Alert from '@/Components/Admin/Alert/Alert.vue';
+import Alerts from '@/Components/Admin/Alert/Alerts.vue';
 
 const props = defineProps({
     crumbs: {
@@ -42,6 +44,8 @@ const getRoute = (offset, params) => {
 
 const isCurrent = (check) => route().current(check);
 
+const messages = computed(() => usePage().props.value.messages);
+
 </script>
 
 <template>
@@ -66,6 +70,42 @@ const isCurrent = (check) => route().current(check);
             </div>
             <main class="w-full max-w-screen-lg bg-white px-6 pb-6">
                 <div class="sticky top-0 bg-white pt-6 z-20">
+                    <Alerts v-if="messages">
+                        <Alert v-if="messages.info"
+                            class="bg-sky-200"
+                            button-class="hover:bg-sky-300 text-sky-800"
+                            message-class="text-sky-800"
+                            label="Info"
+                            :message="messages.info"
+                            :timeout="3000"
+                            @close="delete messages.info"
+                        />
+                        <Alert v-if="messages.success"
+                            class="bg-emerald-200"
+                            button-class="hover:bg-emerald-300 text-emerald-800"
+                            message-class="text-emerald-800"
+                            label="Success"
+                            :message="messages.success"
+                            :timeout="3000"
+                            @close="delete messages.success"
+                        />
+                        <Alert v-if="messages.warning"
+                            class="bg-amber-200"
+                            button-class="hover:bg-amber-300 text-amber-800"
+                            message-class="text-amber-800"
+                            label="Warning"
+                            :message="messages.warning"
+                            @close="delete messages.warning"
+                        />
+                        <Alert v-if="messages.error"
+                            class="bg-rose-200"
+                            button-class="hover:bg-rose-300 text-rose-800"
+                            message-class="text-rose-800"
+                            label="Error"
+                            :message="messages.error"
+                            @close="delete messages.error"
+                        />
+                    </Alerts>
                     <Breadcrumbs class="text-sm h-12 mb-[1px]">
                         <Breadcrumb v-for="(crumb, index) in crumbs.slice(0, -1)" class="flex items-center relative">
                             <Link :href="getRoute(index + 1, route().params)" class="text-blue-600 hover:underline">
