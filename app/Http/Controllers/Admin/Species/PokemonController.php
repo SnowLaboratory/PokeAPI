@@ -1,9 +1,13 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers\Admin\Species;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Species\Pokemon\CreatePokemonRequest;
 use App\Http\Resources\Admin\Pokemon\PokemonResource;
+use App\Http\Resources\Admin\Species\Pokemon\VariationResource;
+use App\Http\Resources\Admin\Species\SpeciesResource;
+use App\Models\Species;
 use App\Models\Pokemon;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -15,12 +19,16 @@ class PokemonController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Species $species)
     {
-        return Inertia::resource('Admin/Pokemon/Index', [
+        return Inertia::resource('Admin/Species/Pokemon/Index', [
             'pokemon' => PokemonResource::collection(
-                Pokemon::with('species')
+                $species->pokemon()
+                ->with('species')
                 ->paginate()
+            ),
+            'species' => SpeciesResource::make(
+                $species
             )
         ]);
     }
@@ -32,7 +40,7 @@ class PokemonController extends Controller
      */
     public function create()
     {
-        //
+        return Inertia::resource('Admin/Species/Pokemon/Create');
     }
 
     /**
@@ -41,9 +49,15 @@ class PokemonController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(CreatePokemonRequest $request, Species $species)
     {
-        //
+        $species->pokemon()->create($request->safe()->only([
+            'name',
+            'weight',
+            'height',
+            'is_default',
+        ]));
+        return back()->with('success', 'Created Pokemon successfully');
     }
 
     /**
@@ -63,10 +77,10 @@ class PokemonController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit(Pokemon $pokemon)
+    public function edit(Species $species, Pokemon $pokemon)
     {
         return Inertia::resource('Admin/Species/Pokemon/Edit', [
-            'pokemon' => PokemonResource::make(
+            'pokemon' => VariationResource::make(
                 $pokemon
             )
         ]);

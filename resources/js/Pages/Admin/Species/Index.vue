@@ -18,13 +18,17 @@ const columns = {
 }
 
 const actions = {
-    'edit': {
+    'Pokemon': {
+        action(species) {
+            Inertia.visit(route('admin.species.pokemon.index', {species}))
+        }
+    },
+    'Edit': {
         action(species) {
             Inertia.visit(route('admin.species.edit', {species}))
         }
     },
-
-    'view': {
+    'View': {
         action(species) {
             Inertia.visit(route('species', {species}))
         }

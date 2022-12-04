@@ -81,8 +81,6 @@ const messages = computed(() => usePage().props.value.messages);
                             Dashboard</Link>
                             <Link :href="route('admin.species.index')"
                                 :class="{ 'active': isCurrent('admin.species.*') }">Species</Link>
-                            <Link :href="route('admin.pokemon.index')"
-                                :class="{ 'active': isCurrent('admin.pokemon.*') }">Pokemon</Link>
                             <Link :href="route('admin.items.index')" :class="{ 'active': isCurrent('admin.items.*') }">
                             Items</Link>
                         </Navigation>
