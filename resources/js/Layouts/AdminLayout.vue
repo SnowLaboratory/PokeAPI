@@ -10,6 +10,15 @@ import { ChevronDownIcon } from '@heroicons/vue/24/outline'
 import Alert from '@/Components/Admin/Alert/Alert.vue';
 import Alerts from '@/Components/Admin/Alert/Alerts.vue';
 
+
+const defaultOptions = {
+    'species': {
+        'index': route('admin.species.index'),
+        'create': route('admin.species.create'),
+        'edit': detectRelation('admin.species.edit'),
+    }
+}
+
 const props = defineProps({
     crumbs: {
         type: Object,
@@ -17,26 +26,15 @@ const props = defineProps({
             'admin': 'dashboard',
         }
     },
-
     options: {
         type: Object,
         default: {},
     },
-
-    breadcrumbOptions: {
-        type: Object,
-        default: {
-            'species': {
-                'index': route('admin.species.index'),
-                'create': route('admin.species.create'),
-            }
-        }
-    }
 })
-console.log({breadcrumbOptions:props.breadcrumbOptions, options:props.options});
+
 const crumbs = computed(() => route().current().split('.'));
 const ending = computed(() => crumbs.value.slice(-1)[0]);
-const options = computed (() => Object.assign(props.breadcrumbOptions, props.options));
+const options = computed (() => Object.assign(defaultOptions, props.options));
 
 const getRoute = (offset, params) => {
     var wantedCrumbs = crumbs.value.slice(0, offset)
@@ -49,10 +47,26 @@ const getRoute = (offset, params) => {
     }
 }
 
+const getOptionRoute = (link) => {
+    if (typeof link === 'function') {
+        try {
+            return link();
+        } catch {
+            return null;
+        }
+    }
+    return link;
+}
+
 const isCurrent = (check) => route().current(check);
 
 const messages = computed(() => usePage().props.value.messages);
 
+</script>
+
+<script>
+    export const detectRelation = r => () => route(r, route().params)
+    export const relationRoute = r => detectRelation(r)()
 </script>
 
 <template>
@@ -127,12 +141,15 @@ const messages = computed(() => usePage().props.value.messages);
                                 </MenuButton>
                                 <MenuItems class="absolute inset-x-0 top-full">
                                     <div class=" bg-white z-10 border rounded">
-                                        <MenuItem v-for="(route, routeName) in options[crumb]">
-                                        <Link :href="route" class="block px-3 py-1 hover:bg-gray-100"
-                                            v-show="(routeName != ending)">
-                                        {{ routeName }}
-                                        </Link>
-                                        </MenuItem>
+                                        <template v-for="(route, routeName) in options[crumb]">
+                                            <template v-if="getOptionRoute(route)">
+                                                <MenuItem >
+                                                        <Link :href="getOptionRoute(route)" class="block px-3 py-1 hover:bg-gray-100">
+                                                            {{ routeName }}
+                                                        </Link>
+                                                </MenuItem>
+                                            </template>
+                                        </template>
                                     </div>
                                 </MenuItems>
                             </Menu>

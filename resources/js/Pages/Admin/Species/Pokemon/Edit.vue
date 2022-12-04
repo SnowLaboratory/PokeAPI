@@ -14,12 +14,6 @@ const props = defineProps({
     }
 })
 
-const BreadcrumbOptions = {
-    'species': {
-        'edit': route('admin.species.edit', route().params)
-    }
-}
-
 const pokemon = computed( () => props.pokemon.data)
 
 const form = useForm({
@@ -34,11 +28,10 @@ const handleRedirect = () => {
     Inertia.visit(route('admin.species.pokemon.index'))
 }
 
-
 </script>
 
 <template>
-    <AdminLayout :options="BreadcrumbOptions">
+    <AdminLayout>
         <template #heading>
             <Heading label="Edit Variation"/>
         </template>

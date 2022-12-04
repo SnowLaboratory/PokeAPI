@@ -5,6 +5,7 @@ import SimpleForm from '@/Components/Admin/Form/SimpleForm.vue';
 import { useForm } from '@inertiajs/inertia-vue3';
 import { Inertia } from '@inertiajs/inertia';
 import SimpleInput from '@/Components/Admin/Form/SimpleInput.vue';
+import { relationRoute } from '@/Layouts/AdminLayout.vue';
 
 const form = useForm({
     name: '',
@@ -14,11 +15,11 @@ const form = useForm({
 })
 
 const handleSubmit = () => {
-    form.post(route('admin.species.pokemon.store', route().params))
+    form.post(relationRoute('admin.species.pokemon.store'))
 }
 
 const handleRedirect = () => {
-    Inertia.visit(route('admin.species.pokemon.index'))
+    Inertia.visit(relationRoute('admin.species.pokemon.index'))
 }
 
 
