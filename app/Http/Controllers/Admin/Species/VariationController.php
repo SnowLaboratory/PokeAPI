@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin\Species;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Admin\Pokemon\PokemonResource;
 use App\Http\Resources\Admin\Species\Pokemon\VariationResource;
+use App\Http\Resources\Admin\Species\SpeciesResource;
 use App\Models\Species;
 use App\Models\Pokemon;
 use Illuminate\Http\Request;
@@ -24,6 +25,9 @@ class VariationController extends Controller
                 $species->pokemon()
                 ->with('species')
                 ->paginate()
+            ),
+            'species' => SpeciesResource::make(
+                $species
             )
         ]);
     }
@@ -35,7 +39,7 @@ class VariationController extends Controller
      */
     public function create()
     {
-        //
+        return Inertia::resource('Admin/Species/Pokemon/Create');
     }
 
     /**
