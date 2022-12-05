@@ -23,7 +23,7 @@ const defaultOptions = {
 const confirmOptions = ref(DefaultConfirmOptions)
 
 onMounted(() => {
-    window.addEventListener('confirm:settings:change', ({detail}) => {
+    window.addEventListener('confirm:settings:change', ({ detail }) => {
         confirmOptions.value = detail
     })
 })
@@ -43,7 +43,7 @@ const props = defineProps({
 
 const crumbs = computed(() => route().current().split('.'));
 const ending = computed(() => crumbs.value.slice(-1)[0]);
-const options = computed (() => Object.assign(defaultOptions, props.options));
+const options = computed(() => Object.assign(defaultOptions, props.options));
 
 const getRoute = (offset, params) => {
     var wantedCrumbs = crumbs.value.slice(0, offset)
@@ -74,34 +74,34 @@ const messages = computed(() => usePage().props.value.messages);
 </script>
 
 <script>
-    export const detectRelation = r => () => route(r, route().params)
-    export const relationRoute = r => detectRelation(r)()
+export const detectRelation = r => () => route(r, route().params)
+export const relationRoute = r => detectRelation(r)()
 
-    export const confirm = (message, actions) => {
+export const confirm = (message, actions) => {
 
-        const settings = {
-            ...DefaultConfirmOptions,
-            message: message,
-            open: true,
-        }
-
-        settings.actions.cancel.action = actions.cancel ?? (() => {});
-        settings.actions.confirm.action = actions.confirm ?? (() => {});
-
-        const event = new CustomEvent('confirm:settings:change', {detail: settings})
-        window.dispatchEvent(event)
+    const settings = {
+        ...DefaultConfirmOptions,
+        message: message,
+        open: true,
     }
 
-    export const confirmRaw = (message, newSettings) => {
-        const settings = {
-            ...confirmOptions.value,
-            message: message,
-            open: true,
-            ...newSettings
-        }
-        const event = new CustomEvent('confirm:settings:change', {detail: settings})
-        window.dispatchEvent(event)
+    settings.actions.cancel.action = actions.cancel ?? (() => { });
+    settings.actions.confirm.action = actions.confirm ?? (() => { });
+
+    const event = new CustomEvent('confirm:settings:change', { detail: settings })
+    window.dispatchEvent(event)
+}
+
+export const confirmRaw = (message, newSettings) => {
+    const settings = {
+        ...confirmOptions.value,
+        message: message,
+        open: true,
+        ...newSettings
     }
+    const event = new CustomEvent('confirm:settings:change', { detail: settings })
+    window.dispatchEvent(event)
+}
 </script>
 
 <template>
@@ -118,6 +118,8 @@ const messages = computed(() => usePage().props.value.messages);
                                 :class="{ 'active': isCurrent('admin.species.*') }">Species</Link>
                             <Link :href="route('admin.items.index')" :class="{ 'active': isCurrent('admin.items.*') }">
                             Items</Link>
+                            <Link :href="route('admin.chains.index')" :class="{ 'active': isCurrent('admin.chains.*') }">
+                            Chains</Link>
                         </Navigation>
                     </slot>
                 </nav>
@@ -125,40 +127,19 @@ const messages = computed(() => usePage().props.value.messages);
             <main class="w-full max-w-screen-lg bg-white px-6 pb-6">
                 <div class="sticky top-0 bg-white pt-6 z-20">
                     <Alerts v-if="messages">
-                        <Alert v-if="messages.info"
-                            class="bg-sky-200"
-                            button-class="hover:bg-sky-300 text-sky-800"
-                            message-class="text-sky-800"
-                            label="Info"
-                            :message="messages.info"
-                            :timeout="3000"
-                            @close="delete messages.info"
-                        />
-                        <Alert v-if="messages.success"
-                            class="bg-emerald-200"
-                            button-class="hover:bg-emerald-300 text-emerald-800"
-                            message-class="text-emerald-800"
-                            label="Success"
-                            :message="messages.success"
-                            :timeout="3000"
-                            @close="delete messages.success"
-                        />
-                        <Alert v-if="messages.warning"
-                            class="bg-amber-200"
-                            button-class="hover:bg-amber-300 text-amber-800"
-                            message-class="text-amber-800"
-                            label="Warning"
-                            :message="messages.warning"
-                            @close="delete messages.warning"
-                        />
-                        <Alert v-if="messages.error"
-                            class="bg-rose-200"
-                            button-class="hover:bg-rose-300 text-rose-800"
-                            message-class="text-rose-800"
-                            label="Error"
-                            :message="messages.error"
-                            @close="delete messages.error"
-                        />
+                        <Alert v-if="messages.info" class="bg-sky-200" button-class="hover:bg-sky-300 text-sky-800"
+                            message-class="text-sky-800" label="Info" :message="messages.info" :timeout="3000"
+                            @close="delete messages.info" />
+                        <Alert v-if="messages.success" class="bg-emerald-200"
+                            button-class="hover:bg-emerald-300 text-emerald-800" message-class="text-emerald-800"
+                            label="Success" :message="messages.success" :timeout="3000"
+                            @close="delete messages.success" />
+                        <Alert v-if="messages.warning" class="bg-amber-200"
+                            button-class="hover:bg-amber-300 text-amber-800" message-class="text-amber-800"
+                            label="Warning" :message="messages.warning" @close="delete messages.warning" />
+                        <Alert v-if="messages.error" class="bg-rose-200" button-class="hover:bg-rose-300 text-rose-800"
+                            message-class="text-rose-800" label="Error" :message="messages.error"
+                            @close="delete messages.error" />
                     </Alerts>
                     <Breadcrumbs class="text-sm h-12 mb-[1px]">
                         <Breadcrumb v-for="(crumb, index) in crumbs.slice(0, -1)" class="flex items-center relative">
@@ -176,10 +157,11 @@ const messages = computed(() => usePage().props.value.messages);
                                     <div class=" bg-white z-10 border rounded">
                                         <template v-for="(route, routeName) in options[crumb]">
                                             <template v-if="getOptionRoute(route)">
-                                                <MenuItem >
-                                                        <Link :href="getOptionRoute(route)" class="block px-3 py-1 hover:bg-gray-100">
-                                                            {{ routeName }}
-                                                        </Link>
+                                                <MenuItem>
+                                                <Link :href="getOptionRoute(route)"
+                                                    class="block px-3 py-1 hover:bg-gray-100">
+                                                    {{ routeName }}
+                                                </Link>
                                                 </MenuItem>
                                             </template>
                                         </template>
@@ -192,23 +174,22 @@ const messages = computed(() => usePage().props.value.messages);
                         </Breadcrumb>
                     </Breadcrumbs>
 
-                        <Confirm :open="confirmOptions.open" :modal-class="confirmOptions.modalClass" @close="(confirmOptions.open = false)">
-                            <template #header>
-                                <DialogTitle>{{ confirmOptions.title ?? 'Confirm' }}</DialogTitle>
-                            </template>
-                            <template #actions="{setIsOpen, submitModal}">
-                                <template v-for="(action, actionLabel) in confirmOptions.actions">
-                                    <button
+                    <Confirm :open="confirmOptions.open" :modal-class="confirmOptions.modalClass"
+                        @close="(confirmOptions.open = false)">
+                        <template #header>
+                            <DialogTitle>{{ confirmOptions.title ?? 'Confirm' }}</DialogTitle>
+                        </template>
+                        <template #actions="{ setIsOpen, submitModal }">
+                            <template v-for="(action, actionLabel) in confirmOptions.actions">
+                                <button
                                     @click.prevent="actionLabel === 'confirm' ? submitModal(action.action) : setIsOpen(false, action.action)"
-                                        class="py-1 px-3 border rounded font-medium text-sm"
-                                        :class="[action.btnClass]"
-                                    >
-                                        {{ action.label ?? actionLabel }}
-                                    </button>
-                                </template>
+                                    class="py-1 px-3 border rounded font-medium text-sm" :class="[action.btnClass]">
+                                    {{ action.label ?? actionLabel }}
+                                </button>
                             </template>
-                            {{ confirmOptions.message }}
-                        </Confirm>
+                        </template>
+                        {{ confirmOptions.message }}
+                    </Confirm>
 
                     <slot name="heading">
                         <Heading :label="crumbs.slice(-2).join(' ')" />

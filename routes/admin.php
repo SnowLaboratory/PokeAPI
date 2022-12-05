@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\Evolution\EvolutionController;
 use App\Http\Controllers\Admin\ItemController;
 use App\Http\Controllers\Admin\Species\PokemonController;
 use App\Http\Controllers\Admin\SpeciesController;
@@ -40,3 +41,4 @@ Route::controller(SpeciesController::class)
         Route::resource('{species}/pokemon', PokemonController::class);
     });
 Route::resource('items', ItemController::class);
+Route::resource('chains', EvolutionController::class);
