@@ -21,7 +21,7 @@ const props = defineProps({
     bounds: {
         type: Object,
         default: null,
-    }
+    },
 })
 
 
