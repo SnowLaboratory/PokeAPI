@@ -1,15 +1,30 @@
 <script setup>
 
-import {computed, getCurrentInstance, onMounted, ref, watch} from 'vue'
+import {computed, createApp, getCurrentInstance, onMounted, ref, watch} from 'vue'
 import interact from 'interactjs'
 import Draggable from './Draggable.vue';
 import Node from './Node.vue';
 import LeaderLine from 'leader-line-new'
+import LineVue from './Line.vue';
 
 const emit = defineEmits([
     'move',
     'selected',
 ])
+
+const { appContext } = getCurrentInstance()
+
+const renderComponent = ({ el, component, props, appContext }) => {
+  let app = createApp(component, props)
+  Object.assign(app._context, appContext) // must use Object.assign on _context
+  app.mount(el)
+
+  return () => {
+    // destroy app/component
+    app?.unmount()
+    app = undefined
+  }
+}
 
 // function defineRefs(refs) {
 //   return _.chain(refs).keyBy().mapValues(ref).value();
@@ -37,7 +52,8 @@ const el = ref(null);
 
 const nodeRefs = ref([])
 
-const uniqueNodes = _.chain(props.edges)
+const uniqueNodes = computed(() => (
+    _.chain(props.edges)
     .map('p1')
     .concat(_.map(props.edges, 'p2'))
     .uniqBy('id')
@@ -49,10 +65,12 @@ const uniqueNodes = _.chain(props.edges)
                 y: point.y,
             },
             id: point.id,
+            edges: {},
             data: {},
         }
     })
     .value()
+));
 
     console.log(uniqueNodes)
     // console.log(_.map(uniqueNodes, x => `point_${x.id}`))
@@ -61,20 +79,53 @@ const uniqueNodes = _.chain(props.edges)
 
 // const nodes = ref([])
 
-const edges = computed(() => props.edges)
+const edges = computed(() => (
+    _.chain(props.edges)
+    .map((x, id) => ({...x, id: id + 1}))
+    .value()
+))
+
+const lines = ref({})
+const lineEls = ref({})
+
 const updateEdges = () => {
     edges.value.forEach(edge => {
-        // console.log()
+        console.log({edge})
+
+        const n1 = uniqueNodes.value[edge.p1.id]
+        n1.edges[edge.id] = edge;
+
+        const n2 = uniqueNodes.value[edge.p2.id]
+        n2.edges[edge.id] = edge;
+
+        console.log({n1,n2})
+
         const p1 = el.value.querySelector(`[data-id="${edge.p1.id}"]`);
         const p2 = el.value.querySelector(`[data-id="${edge.p2.id}"]`);
 
-        // console.log(p1)
-        edge.line = edge.line ?? new LeaderLine(
-            p1, p2
-        )
-        edge.line.startPlugColor = getComputedStyle(p1).stroke
-        edge.line.endPlugColor = getComputedStyle(p2).stroke
-        edge.line.gradient = true
+        const line = lines.value[edge.id] ?? new LeaderLine(p1, p2)
+
+        if (!lineEls[edge.id]) {
+            const lineEl = document.body.querySelector(':scope>svg.leader-line:last-of-type');
+            // TODO: pass the existing element as a slot?
+            // TODO: might have to re-teleport back to the body?
+            // lineEls[edge.id] = renderComponent({
+            //     el: ,
+            //     component: LineVue,
+            //     props: {
+            //         key: edge.id,
+            //         msg: 'Message ' + edge.id,
+            //     },
+            //     appContext
+            // })
+            lineEls[edge.id] = edge.id
+        }
+
+        line.startPlugColor = getComputedStyle(p1).stroke
+        line.endPlugColor = getComputedStyle(p2).stroke
+        line.gradient = true
+        lines.value[edge.id] = line;
+
     })
 }
 
@@ -92,12 +143,9 @@ const bounds = computed(() => ({
 }))
 
 const handleUpdate = (point) => {
-    edges.value.filter(edge => {
-        return edge.p1.id === point.id
-        || edge.p2.id === point.id
-    }).forEach(edge => {
-        edge.line.position()
-    })
+    for (let edgeId in point.edges) {
+        lines.value[edgeId].position()
+    }
 }
 
 onMounted(() => {
