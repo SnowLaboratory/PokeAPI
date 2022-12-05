@@ -25,4 +25,18 @@ export default defineConfig({
     ssr: {
         noExternal: ['@inertiajs/server'],
     },
+    // optimizeDeps: {
+    //     include: [
+    //         'leader-line',
+    //         'lodash'
+    //     ]
+    // },
+    // build: {
+    //     commonjsOptions: {
+    //         include: [
+    //             /leader-line/,
+    //             /node_modules/
+    //         ]
+    //     }
+    // }
 });
