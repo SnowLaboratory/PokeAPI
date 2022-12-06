@@ -6,7 +6,7 @@ import Draggable from './Draggable.vue';
 
 const emit = defineEmits([
     'update:position',
-    'selected',
+    'select',
 ])
 
 const props = defineProps({
@@ -22,6 +22,10 @@ const props = defineProps({
         type: Object,
         default: null,
     },
+    data: {
+        type: Object,
+        default: {}
+    }
 })
 
 
@@ -30,21 +34,20 @@ const internalPos = ref(props.position ?? {
     y: 0,
 })
 
-const handleSelect = () => {
+const handleSelect = (e) => {
     if (!props.locked) {
-        emit('selected')
+        e.$node = {
+            data: props.data
+        }
+        emit('select', e)
     }
 }
-
-onMounted(() => {
-    console.log('node component', getCurrentInstance())
-})
 
 </script>
 
 <template>
     <Draggable
-        @click="handleSelect"
+        @mousedown.exact="handleSelect"
         :bounds="props.bounds"
         :locked="props.locked"
         v-model:position="internalPos"

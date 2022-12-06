@@ -9,51 +9,49 @@ import LineVue from './Line.vue';
 
 const emit = defineEmits([
     'move',
-    'selected',
+    'select',
+    'select2'
 ])
 
 
 const props = defineProps({
+    selectedNodeClass: {
+        type: String,
+        default: '',
+    },
     nodeClass: {
         type: String,
         default: "bg-emerald-300 stroke-slate-600"
     },
     edges: {
         type: Array,
-        default: [
-            {
-                data: {},
-                p1: {x: 20, y: 30, id:11},
-                p2: {x: 0, y: 0, id:21},
-            },
-            {
-                data: {},
-                p1: {x: 0, y: 0, id:11},
-                p2: {x: 0, y: 0, id:31},
-            },
-        ],
+        default: [],
     }
 })
 
 const el = ref(null);
-
+const nodeIds = ref(1)
 const uniqueNodes = computed(() => (
     _.chain(props.edges)
     .map('p1')
     .concat(_.map(props.edges, 'p2'))
-    .uniqBy('id')
-    .keyBy('id')
-    .mapValues(point => {
+    .map(point => {
+        if (!point) return null;
+
+        const id = ++nodeIds.value
         return {
             position: {
                 x: point.x,
                 y: point.y,
             },
-            id: point.id,
+            id: point?.id || id,
             edges: {},
-            data: {},
+            data: ref(point?.data ?? {}),
         }
     })
+    .filter()
+    .uniqBy('id')
+    .keyBy('id')
     .value()
 ));
 
@@ -69,7 +67,8 @@ const lineEls = ref({})
 
 const updateEdges = () => {
     edges.value.forEach(edge => {
-        console.log({edge})
+
+        if (!edge.p1?.id || !edge.p2?.id) return;
 
         const n1 = uniqueNodes.value[edge.p1.id]
         n1.edges[edge.id] = edge;
@@ -77,17 +76,16 @@ const updateEdges = () => {
         const n2 = uniqueNodes.value[edge.p2.id]
         n2.edges[edge.id] = edge;
 
-        console.log({n1,n2})
-
         const p1 = el.value.querySelector(`[data-id="${edge.p1.id}"]`);
-        const p2 = el.value.querySelector(`[data-id="${edge.p2.id}"]`);
+        const p2 = el.value.querySelector(`[data-id="${edge.p2?.id}"]`);
 
         const line = lines.value[edge.id] ?? new LeaderLine(p1, p2)
 
         if (!lineEls[edge.id]) {
             const lineEl = document.body.querySelector(':scope>svg.leader-line:last-of-type');
 
-            const attrs = getCurrentInstance().attrs;
+            const attrs = getCurrentInstance()?.attrs;
+
             const prefix = 'onLine:'
             for (let key in attrs) {
                 if (key.startsWith(prefix)) {
@@ -107,13 +105,27 @@ const updateEdges = () => {
         line.endPlugColor = getComputedStyle(p2).stroke
         line.gradient = true
         lines.value[edge.id] = line;
-
     })
 }
 
-const handleSelect = () => {
+const handleSelect = (e, point) => {
     if (!props.locked) {
-        emit('selected')
+        const data = e.$node.data
+        e.$node = {
+            ...e.$node,
+            ...point,
+            data
+        }
+        e.$node.data.value.selected = !e.$node.data.value.selected
+        emit('select', e)
+    }
+}
+
+const handleSelect2 = (e, point) => {
+    if (!props.locked) {
+        e.$node = point
+        e.$node.data.value.selected = !e.$node.data.value.selected
+        emit('select2', e)
     }
 }
 
@@ -144,11 +156,14 @@ watch(edges, (newValue) => {
     <div ref="el">
         <template v-for="(point,id) in uniqueNodes">
                 <Node :bounds="bounds"
+                  @select="handleSelect($event, point)"
+                  @click.shift.exact="handleSelect2($event, point)"
                   v-model:position="point.position"
                   :data-id="point.id"
                   @update:position="handleUpdate(point)"
                   class="absolute h-6 w-6 rounded-full"
-                  :class="[nodeClass]"
+                  :class="[nodeClass, {[selectedNodeClass]: point.data.value.selected}]"
+                  :data="point.data"
                 />
                 <!-- {{ point.value.id }} -->
         </template>

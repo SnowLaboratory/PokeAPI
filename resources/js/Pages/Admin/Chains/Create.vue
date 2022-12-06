@@ -5,7 +5,7 @@ import SimpleForm from '@/Components/Admin/Form/SimpleForm.vue';
 import { useForm } from '@inertiajs/inertia-vue3';
 import { Inertia } from '@inertiajs/inertia';
 import SimpleInput from '@/Components/Admin/Form/SimpleInput.vue';
-import { onMounted, ref } from 'vue';
+import { isRef, onMounted, ref, toRef, unref } from 'vue';
 import LeaderLine from 'leader-line-new'
 
 
@@ -17,12 +17,85 @@ const form = useForm({
     name: 'asdf'
 })
 
+const edges = ref([]);
+
 const handleSubmit = () => {
     form.post(route('admin.chains.store'))
 }
 
 const handleRedirect = () => {
     Inertia.visit(route('admin.chains.index'))
+}
+
+const selectingNode = ref(false)
+const selectedNode = ref(null);
+const newIdCounter = ref(1);
+
+const createNode = (x, y, options = {}) => {
+    edges.value.push({
+        p1: {
+            x,y,
+            id: newIdCounter.value++,
+            data: {
+                selected: false
+            },
+            // ...options
+        },
+        p2: null,
+    })
+    return edges.value[edges.value.length - 1].p1
+}
+
+const selectNode = (node) => {
+    selectedNode.value = node;
+    selectingNode.value = true;
+
+    edges.value.forEach(edge => {
+        _.set(edge.p1 ?? {}, 'data.selected', false)
+        _.set(edge.p2 ?? {}, 'data.selected', false)
+    })
+
+    if (isRef(node.data)) {
+        node.data.value.selected = !node.data.value.selected
+    } else {
+        node.data.selected = !node.data.selected
+    }
+}
+
+const handleGraphAreaClick = (e) => {
+    if (selectingNode.value) {
+        e.preventDefault();
+        selectingNode.value = false
+        return;
+    }
+    const node = createNode(e.layerX - 24, e.layerY - 24)
+    selectNode(node)
+    selectingNode.value = false
+}
+
+const linkNodes = (p1, p2) => {
+    edges.value.push({p1, p2})
+}
+
+const handleShiftClick = (e) => {
+    if (selectedNode.value) {
+        const node = createNode(e.layerX - 24, e.layerY - 24)
+        setTimeout(() => {
+            linkNodes(selectedNode.value, node)
+            selectNode(node)
+            selectingNode.value = false
+        }, 1)
+    }
+}
+
+const handleSelectedNode = (e) => {
+    selectNode(e.$node)
+}
+
+const handleSecondSelection = (e) => {
+    linkNodes(selectedNode.value, e.$node)
+    selectNode(e.$node)
+    selectingNode.value = false
 }
 
 const handleLineClick = (e) => {
@@ -41,8 +114,15 @@ const handleLineClick = (e) => {
 
             <Graph
                 @line:click="handleLineClick"
-                class="relative w-full h-96 bg-gray-100 p-3"
-                node-class="bg-emerald-500 stroke-sky-600 hover:cursor-pointer hover:bg-emerald-400 active:cursor-move">
+                @click.exact="handleGraphAreaClick"
+                @select.stop="handleSelectedNode"
+                @select2.stop="handleSecondSelection"
+                @click.shift.exact="handleShiftClick"
+                :edges="edges"
+                class="relative w-full h-96 bg-gray-100 p-3 select-none"
+                node-class="bg-emerald-500 stroke-sky-600 hover:cursor-pointer hover:bg-emerald-400 active:cursor-move"
+                selected-node-class="border-2 border-slate-800"
+                >
 
                 <div class="w-full text-center text-zinc-400 text-sm py-6">
                     <ul class="space-y-3">
