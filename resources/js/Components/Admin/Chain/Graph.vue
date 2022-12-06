@@ -12,25 +12,12 @@ const emit = defineEmits([
     'selected',
 ])
 
-const { appContext } = getCurrentInstance()
-
-const renderComponent = ({ el, component, props, appContext }) => {
-  let app = createApp(component, props)
-  Object.assign(app._context, appContext) // must use Object.assign on _context
-  app.mount(el)
-
-  return () => {
-    // destroy app/component
-    app?.unmount()
-    app = undefined
-  }
-}
-
-// function defineRefs(refs) {
-//   return _.chain(refs).keyBy().mapValues(ref).value();
-// }
 
 const props = defineProps({
+    nodeClass: {
+        type: String,
+        default: "bg-emerald-300 stroke-slate-600"
+    },
     edges: {
         type: Array,
         default: [
@@ -49,8 +36,6 @@ const props = defineProps({
 })
 
 const el = ref(null);
-
-const nodeRefs = ref([])
 
 const uniqueNodes = computed(() => (
     _.chain(props.edges)
@@ -72,12 +57,6 @@ const uniqueNodes = computed(() => (
     .value()
 ));
 
-    console.log(uniqueNodes)
-    // console.log(_.map(uniqueNodes, x => `point_${x.id}`))
-
-// const inputs = defineRefs(_.map(uniqueNodes, x => `point_${x.id}`))
-
-// const nodes = ref([])
 
 const edges = computed(() => (
     _.chain(props.edges)
@@ -107,17 +86,20 @@ const updateEdges = () => {
 
         if (!lineEls[edge.id]) {
             const lineEl = document.body.querySelector(':scope>svg.leader-line:last-of-type');
-            // TODO: pass the existing element as a slot?
-            // TODO: might have to re-teleport back to the body?
-            // lineEls[edge.id] = renderComponent({
-            //     el: ,
-            //     component: LineVue,
-            //     props: {
-            //         key: edge.id,
-            //         msg: 'Message ' + edge.id,
-            //     },
-            //     appContext
-            // })
+
+            const attrs = getCurrentInstance().attrs;
+            const prefix = 'onLine:'
+            for (let key in attrs) {
+                if (key.startsWith(prefix)) {
+                    const event = key.slice(prefix.length);
+                    lineEl.addEventListener(event, e => {
+                        e.$line = line
+                        e.$el = lineEl
+                        attrs[key].call(undefined, e)
+                    })
+                }
+            }
+
             lineEls[edge.id] = edge.id
         }
 
@@ -165,10 +147,39 @@ watch(edges, (newValue) => {
                   v-model:position="point.position"
                   :data-id="point.id"
                   @update:position="handleUpdate(point)"
-                  class="absolute h-6 w-6 bg-emerald-400 rounded-full stroke-slate-600"
+                  class="absolute h-6 w-6 rounded-full"
+                  :class="[nodeClass]"
                 />
                 <!-- {{ point.value.id }} -->
         </template>
         <slot></slot>
     </div>
 </template>
+
+<style>
+    svg.leader-line {
+        pointer-events: none !important;
+    }
+
+    svg.leader-line .leader-line-line-path {
+        pointer-events: stroke !important;
+    }
+
+    svg.leader-line use[href^="#leader-line-arrow"] {
+        pointer-events: fill !important;
+    }
+
+    svg.leader-line:hover use[href^="#leader-line-arrow"] {
+        fill:inherit !important;
+    }
+
+    svg.leader-line:hover {
+        fill: blue;
+        cursor: pointer;
+    }
+
+    svg.leader-line:hover .leader-line-line-path {
+        stroke: blue;
+        cursor: pointer;
+    }
+</style>

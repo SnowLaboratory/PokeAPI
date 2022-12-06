@@ -1,6 +1,6 @@
 <script setup>
 
-import {onMounted, ref} from 'vue'
+import {getCurrentInstance, onMounted, ref} from 'vue'
 import interact from 'interactjs'
 import Draggable from './Draggable.vue';
 
@@ -35,6 +35,10 @@ const handleSelect = () => {
         emit('selected')
     }
 }
+
+onMounted(() => {
+    console.log('node component', getCurrentInstance())
+})
 
 </script>
 

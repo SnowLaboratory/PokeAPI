@@ -49,7 +49,6 @@ const restrictions = computed(() => {
 })
 
 onMounted(() => {
-    console.log(bounds.value)
     el.value.style.transform =`translate(${internalPos.value.x}px, ${internalPos.value.y}px)`
     interact(el.value).draggable({
         modifiers: [
@@ -80,7 +79,7 @@ onMounted(() => {
 
             },
         },
-    })
+    }).styleCursor(false)
 })
 
 </script>
