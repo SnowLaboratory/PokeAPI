@@ -1,11 +1,8 @@
 <script setup>
 
 import {computed, createApp, getCurrentInstance, onMounted, ref, watch} from 'vue'
-import interact from 'interactjs'
-import Draggable from './Draggable.vue';
 import Node from './Node.vue';
 import LeaderLine from 'leader-line-new'
-import LineVue from './Line.vue';
 
 const emit = defineEmits([
     'move',
@@ -64,6 +61,7 @@ const edges = computed(() => (
 
 const lines = ref({})
 const lineEls = ref({})
+const attrs = ref(getCurrentInstance().attrs)
 
 const updateEdges = () => {
     edges.value.forEach(edge => {
@@ -84,16 +82,14 @@ const updateEdges = () => {
         if (!lineEls[edge.id]) {
             const lineEl = document.body.querySelector(':scope>svg.leader-line:last-of-type');
 
-            const attrs = getCurrentInstance()?.attrs;
-
             const prefix = 'onLine:'
-            for (let key in attrs) {
+            for (let key in attrs.value) {
                 if (key.startsWith(prefix)) {
                     const event = key.slice(prefix.length);
                     lineEl.addEventListener(event, e => {
                         e.$line = line
                         e.$el = lineEl
-                        attrs[key].call(undefined, e)
+                        attrs.value[key].call(undefined, e)
                     })
                 }
             }
