@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin\Species;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Species\Pokemon\CreatePokemonRequest;
+use App\Http\Requests\Species\Pokemon\EditPokemonRequest;
 use App\Http\Resources\Admin\Pokemon\PokemonResource;
 use App\Http\Resources\Admin\Species\Pokemon\VariationResource;
 use App\Http\Resources\Admin\Species\SpeciesResource;
@@ -93,9 +94,15 @@ class PokemonController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(EditPokemonRequest $request, Species $species)
     {
-        //
+        $species->pokemon()->update($request->safe()->only([
+            'name',
+            'weight',
+            'height',
+            'is_default',
+        ]));
+        return back()->with('success', 'Updated Pokemon successfully');
     }
 
     /**
