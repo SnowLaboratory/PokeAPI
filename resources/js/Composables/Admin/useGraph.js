@@ -1,176 +1,106 @@
-import { isRef, onMounted, reactive, ref, toRef, unref } from 'vue';
+import { computed, isRef, onMounted, reactive, ref, toRef, unref } from 'vue';
+import { useHook } from './useHook';
+
+const nextId = ref(1)
 
 export const useGraph = (settings) => {
+    const { hook } = useHook('useGraph', settings);
 
-    const edges = isRef(settings.edges)
-                    ? settings.edges
-                    : ref(settings.edges);
+    const nodes = ref({})
+    const edges = ref({})
+    const selectedNode = ref(null)
 
-    const selectingNode = ref(false)
-    const selectedNode = ref(null);
-    const newIdCounter = ref(settings.startingId ?? 1);
-
-    const invoke = (key, ...args) => {
-        if (typeof settings[key] === 'function') {
-            return settings[key](...args)
+    const setAllNodeMeta = (key, value) => {
+        for (let id in nodes.value) {
+            setNodeMeta(id, key, value)
         }
     }
 
-    const stopped = (key, ...args) => {
-        return invoke(key, ...args) === false;
+    const setNodeMeta = (nodeId, key, value) => {
+        _.set(nodes.value[nodeId], ['meta', key], value);
     }
 
-    const createNode = (x, y, options = {}) => {
-        if (stopped('beforeCreateNode', x,y,options)) return
-        edges.value.push({
-            p1: {
-                x,y,
-                id: newIdCounter.value++,
-                data: {
-                    selected: false
-                },
-                // ...options
+    const setAllEdgeMeta = (key, value) => {
+        for (let id in edges.value) {
+            setEdgeMeta(id, key, value)
+        }
+    }
+
+    const setEdgeMeta = (edgeId, key, value) => {
+        _.set(edges.value[edgeId], ['meta', key], value);
+    }
+
+    const selectNode = (nodeId) => {
+        setAllNodeMeta('selected', false)
+        setNodeMeta(nodeId, 'selected', true)
+        selectedNode.value = nodes.value[nodeId]
+    }
+
+    const createDataAttributes = () => {
+        return {
+            meta: {
+                selected: true
             },
-            p2: null
-        })
-        invoke('afterCreateNode', edges.value[edges.value.length - 1].p1)
-        return edges.value[edges.value.length - 1].p1
-    }
-
-    const selectNode = (node) => {
-        if (stopped('beforeSelect', node)) return
-        selectedNode.value = node;
-        selectingNode.value = true;
-
-        edges.value.forEach(edge => {
-            _.set(edge.p1 ?? {}, 'data.selected', false)
-            _.set(edge.p2 ?? {}, 'data.selected', false)
-        })
-
-        if (isRef(node.data)) {
-            node.data.value.selected = !node.data.value.selected
-        } else {
-            node.data.selected = !node.data.selected
-        }
-        if (stopped('afterSelect', node)) return
-    }
-
-    const handleAreaClick = (e) => {
-        if (stopped('beforeAreaClick', e)) return
-
-        if (selectingNode.value) {
-            e.preventDefault();
-            selectingNode.value = false
-            return;
-        }
-
-        const node = createNode(e.layerX - 24, e.layerY - 24)
-        console.log(node)
-        selectNode(node)
-        selectingNode.value = false
-        if (stopped('afterAreaClick', e)) return
-    }
-
-    const linkNodes = (p1, p2) => {
-        if (stopped('beforeLinkNodes', p1, p2)) return
-
-        // const filter = x => (
-        //     // !x.p2 && !x.p1.data.selected && (x.p1.id == p1.id || x.p1.id == p2.id)
-
-        // )
-
-        // edges.value = _.reject(edges.value, filter)
-
-        // console.log('asdf', selectedNode.value.id, p1.id, p2.id)
-
-        if (selectedNode.value.id === p1.id) {
-            const local = x => (
-                !x.p2 && x.p1.id == p1.id
-            )
-            const foreign = x => (
-                !x.p2 && x.p1.id == p2.id
-            )
-
-            const e1 = edges.value.find(local);
-
-            if (!e1) {
-                const e2 = edges.value.find(foreign)
-                e2.p2 = e2.p1
-                e2.p1 = p1
-                // console.log(e2, selectedNode.value)
-                // const n1 = edges.value.find(local).p1;
-            } else {
-                const n2 = edges.value.find(foreign).p1;
-                e1.p2 = n2
-                _.remove(edges.value, foreign)
-            }
-
-
-
-            // edges.value.filter(filter).map(
-            //     x => {
-            //         x.p2 = p1
-            //         return x
-            //     }
-            // )
-            // console.log(edges.value.filter(filter))
-        }
-
-        // edges.value.push({p1, p2, data:{}})
-
-        if (stopped('afterLinkNodes', p1, p2)) return
-    }
-
-    const handleShiftClick = (e) => {
-        if (selectedNode.value) {
-
-            if (stopped('beforeShiftClick', e)) return
-            selectingNode.value = false
-            const node = createNode(e.layerX - 24, e.layerY - 24)
-            setTimeout(() => {
-                linkNodes(selectedNode.value, node)
-                selectNode(node)
-                selectingNode.value = false
-                if (stopped('afterShiftClick', selectedNode, node)) return
-            }, 1)
+            data: {},
         }
     }
 
-    const handleSelectedNode = (e) => {
-        if (stopped('beforeSelectNode', e)) return
-        selectNode(e.$node)
-        if (stopped('afterSelectNode', e.$node)) return
-    }
-
-    const handleSecondSelection = (e) => {
-        if (stopped('beforeSelect2', e)) return
-        console.log('2nd selection', e.$node, selectedNode.value)
-        linkNodes(selectedNode.value, e.$node)
-        selectNode(e.$node)
-        selectingNode.value = false
-        if (stopped('afterSelect2', e.$node)) return
-    }
-
-    const dataModel = (value, key) => {
-        if (selectedNode.value) {
-            _.set(selectedNode.value, ['data', key], value)
+    const createNode = (id, x, y) => {
+        return {
+            id,
+            position: { x, y },
+            ...createDataAttributes(),
         }
     }
 
-    return reactive({
-        // return event listeners
-        createNode,
+    const addNode = (x, y) => {
+        const id = nextId.value++
+        const node = createNode(id, x, y)
+        nodes.value = {
+            ...nodes.value,
+            [id]: node
+        }
+        selectNode(id)
+        return node;
+    }
+
+    const removeNode = (id) => {
+        delete nodes[id]
+    }
+
+    const linkNodes = (parent, child) => {
+        const id = nextId.value++
+
+        const edge = {
+            id,
+            parent,
+            child,
+            ...createDataAttributes(),
+        }
+
+        edges.value = {
+            ...edges.value,
+            [id]: edge
+        }
+        return edge
+    }
+
+    const removeLink = (id) => {
+        delete edges.value[id]
+    }
+
+    return {
+        get nodes () {
+            return nodes.value
+        },
+        get edges () {
+            return edges.value
+        },
+        get selectedNode () {
+            return selectedNode.value
+        },
+        addNode,
         selectNode,
-        handleAreaClick,
         linkNodes,
-        handleShiftClick,
-        handleSelectedNode,
-        handleSecondSelection,
-        edges,
-        selectNode,
-        selectedNode,
-        selectingNode,
-        newIdCounter,
-        dataModel
-    })
+    }
 }

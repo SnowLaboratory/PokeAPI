@@ -27,13 +27,7 @@ const handleRedirect = () => {
     Inertia.visit(route('admin.chains.index'))
 }
 
-const graph = useGraph({
-    edges: form.edges,
-    startingId: 2,
-    afterSelect () {
-        console.log('afterwards', graph)
-    }
-})
+const graph = useGraph({})
 
 const handleLineClick = (e) => {
     e.$line.middleLabel = LeaderLine.captionLabel({text: 'Clicked!', color: 'red'});
@@ -49,7 +43,7 @@ const handleLineClick = (e) => {
 
         <SimpleForm @submit="handleSubmit" @redirect="handleRedirect" :form="form">
 
-            <Graph
+            <!-- <Graph
                 @line:click="handleLineClick"
                 @click.exact="graph.handleAreaClick"
                 @select.stop="graph.handleSelectedNode"
@@ -59,8 +53,9 @@ const handleLineClick = (e) => {
                 class="relative w-full h-96 bg-gray-100 p-3 select-none"
                 node-class="bg-emerald-500 stroke-sky-600 hover:cursor-pointer hover:bg-emerald-400 active:cursor-move"
                 selected-node-class="border-2 border-slate-800"
-                >
-                <div class="w-full text-center text-zinc-400 text-sm py-6">
+                > -->
+            <Graph :graph="graph" as="main" class="relative w-full h-96 bg-gray-100 p-3 select-none">
+                <div class="w-full text-center text-zinc-400 text-sm py-6 pointer-events-none">
                     <ul class="space-y-3">
                         <li>Click to add/select node</li>
                         <li>Shift + Click to connect nodes</li>
@@ -69,7 +64,7 @@ const handleLineClick = (e) => {
             </Graph>
 
             <div>
-                <SimpleInput label="name" :model-value="graph.selectedNode?.data?.name" @update:model-value="graph.dataModel($event, 'name')" :error="form.errors.name"></SimpleInput>
+                <!-- <SimpleInput label="name" :model-value="graph.selectedNode?.data?.name" @update:model-value="graph.dataModel($event, 'name')" :error="form.errors.name"></SimpleInput> -->
             </div>
 
         </SimpleForm>

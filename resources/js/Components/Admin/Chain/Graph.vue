@@ -3,6 +3,7 @@
 import {computed, createApp, getCurrentInstance, onMounted, ref, watch} from 'vue'
 import Node from './Node.vue';
 import LeaderLine from 'leader-line-new'
+import { useGraph } from '@/Composables/Admin/useGraph';
 
 const emit = defineEmits([
     'move',
@@ -14,116 +15,25 @@ const emit = defineEmits([
 const props = defineProps({
     selectedNodeClass: {
         type: String,
-        default: '',
+        default: 'ring-2 ring-black',
     },
     nodeClass: {
         type: String,
         default: "bg-emerald-300 stroke-slate-600"
     },
-    edges: {
-        type: Array,
-        default: [],
+    as: {
+        type: String,
+        default: 'div',
+    },
+    graph: {
+        type: Object,
+        default: useGraph({})
     }
 })
 
 const el = ref(null);
-const nodeIds = ref(1)
-const uniqueNodes = computed(() => (
-    _.chain(props.edges)
-    .map('p1')
-    .concat(_.map(props.edges, 'p2'))
-    .map(point => {
-        if (!point) return null;
-
-        const id = ++nodeIds.value
-        return {
-            position: {
-                x: point.x,
-                y: point.y,
-            },
-            id: point?.id || id,
-            edges: {},
-            data: ref(point?.data ?? {}),
-        }
-    })
-    .filter()
-    .uniqBy('id')
-    .keyBy('id')
-    .value()
-));
-
-
-const edges = computed(() => (
-    _.chain(props.edges)
-    .map((x, id) => ({...x, id: id + 1}))
-    .value()
-))
-
-const lines = ref({})
-const lineEls = ref({})
+const graph = computed(() => props.graph)
 const attrs = ref(getCurrentInstance().attrs)
-
-const updateEdges = () => {
-    edges.value.forEach(edge => {
-
-        if (!edge.p1?.id || !edge.p2?.id) return;
-
-        const n1 = uniqueNodes.value[edge.p1.id]
-        n1.edges[edge.id] = edge;
-
-        const n2 = uniqueNodes.value[edge.p2.id]
-        n2.edges[edge.id] = edge;
-
-        const p1 = el.value.querySelector(`[data-id="${edge.p1.id}"]`);
-        const p2 = el.value.querySelector(`[data-id="${edge.p2?.id}"]`);
-
-        const line = lines.value[edge.id] ?? new LeaderLine(p1, p2)
-
-        if (!lineEls[edge.id]) {
-            const lineEl = document.body.querySelector(':scope>svg.leader-line:last-of-type');
-
-            const prefix = 'onLine:'
-            for (let key in attrs.value) {
-                if (key.startsWith(prefix)) {
-                    const event = key.slice(prefix.length);
-                    lineEl.addEventListener(event, e => {
-                        e.$line = line
-                        e.$el = lineEl
-                        attrs.value[key].call(undefined, e)
-                    })
-                }
-            }
-
-            lineEls[edge.id] = edge.id
-        }
-
-        line.startPlugColor = getComputedStyle(p1).stroke
-        line.endPlugColor = getComputedStyle(p2).stroke
-        line.gradient = true
-        lines.value[edge.id] = line;
-    })
-}
-
-const handleSelect = (e, point) => {
-    if (!props.locked) {
-        const data = e.$node.data
-        e.$node = {
-            ...e.$node,
-            ...point,
-            data
-        }
-        e.$node.data.value.selected = !e.$node.data.value.selected
-        emit('select', e)
-    }
-}
-
-const handleSelect2 = (e, point) => {
-    if (!props.locked) {
-        e.$node = point
-        e.$node.data.value.selected = !e.$node.data.value.selected
-        emit('select2', e)
-    }
-}
 
 const bounds = computed(() => ({
     top: el.value?.getBoundingClientRect().top,
@@ -132,39 +42,118 @@ const bounds = computed(() => ({
     bottom: el.value?.getBoundingClientRect().bottom,
 }))
 
-const handleUpdate = (point) => {
-    for (let edgeId in point.edges) {
-        lines.value[edgeId].position()
+
+const createNewNode = (e) => {
+    graph.value.addNode(e.offsetX, e.offsetY)
+}
+
+const vBindLineElement = (edge) => {
+    const prefix = 'onLine:'
+    for (let key in attrs.value) {
+        if (key.startsWith(prefix)) {
+            const event = key.slice(prefix.length);
+            edge.meta.lineElement.addEventListener(event, e => {
+                e.$line = line
+                e.$el = lineEl
+                e.$edge = edge
+                attrs.value[key].call(undefined, e)
+            })
+        }
     }
 }
 
-onMounted(() => {
-    updateEdges()
-})
+const createLineElement = (edge) => {
+    console.log({edge})
+    const p1 = el.value.querySelector(`[data-id="${edge.parent.id}"]`);
+    const p2 = el.value.querySelector(`[data-id="${edge.child.id}"]`);
 
-watch(edges, (newValue) => {
-    if (newValue) updateEdges()
-})
+    console.log({p1, p2})
+    const line = edge.meta.line ?? new LeaderLine(p1, p2, {hide:true})
+
+    if (!edge.meta.lineElement) {
+        const lineEl = document.body.querySelector(':scope>svg.leader-line:last-of-type');
+        edge.meta.lineElement = lineEl
+        vBindLineElement(lineEl, line)
+    }
+
+    line.startPlugColor = getComputedStyle(p1).stroke
+    line.endPlugColor = getComputedStyle(p2).stroke
+    line.gradient = true
+    line.path = 'straight'
+    line.size = 6;
+    line.startPlugSize = 0.6;
+    line.endPlugSize = 0.6;
+    line.dash = {
+        animation: {
+            duration: 500,
+            timing: 'linear'
+        }
+    }
+    line.show('draw', {duration: 150, timing: 'ease-in-out'})
+    edge.meta.line = line;
+}
+
+const linkNodes = (n1, n2) => {
+    const edge = graph.value.linkNodes(n1, n2)
+    n1.meta.edges = {
+        ...n1.meta.edges,
+        [edge.id]: edge
+    };
+    n2.meta.edges = {
+        ...n2.meta.edges,
+        [edge.id]: edge
+    };
+    setTimeout(() => {
+        createLineElement(edge)
+        graph.value.selectNode(n2.id)
+    }, 1)
+}
+
+const linkNewNode = (e) => {
+    const previousNode = graph.value.selectedNode
+    const newNode = graph.value.addNode(e.offsetX, e.offsetY)
+    if (previousNode) {
+        linkNodes(previousNode, newNode)
+    }
+}
+
+const linkExistingNode = (existingNode) => {
+    const previousNode = graph.value.selectedNode
+    if (previousNode) {
+        linkNodes(previousNode, existingNode)
+    }
+}
+
+const updateNodePosition = (node) => {
+    for (let edgeId in node.meta.edges ?? {}) {
+        const edge = node.meta.edges[edgeId]
+        edge.meta.line.position()
+    }
+}
 
 </script>
 
 <template>
-    <div ref="el">
-        <template v-for="(point,id) in uniqueNodes">
+    <component ref="el" :is="as"
+        @click.exact="createNewNode"
+        @click.shift.exact="linkNewNode"
+        >
+        <template v-for="(node,id) in graph.nodes">
                 <Node :bounds="bounds"
-                  @select="handleSelect($event, point)"
-                  @click.shift.exact="handleSelect2($event, point)"
-                  v-model:position="point.position"
-                  :data-id="point.id"
-                  @update:position="handleUpdate(point)"
-                  class="absolute h-6 w-6 rounded-full"
-                  :class="[nodeClass, {[selectedNodeClass]: point.data.value.selected}]"
-                  :data="point.data"
-                />
-                <!-- {{ point.value.id }} -->
+                    v-model:position="node.position"
+                    @select="graph.selectNode(id)"
+                    @click.exact.stop=""
+                    @click.shift.exact.stop="linkExistingNode(node)"
+                    @update:position="updateNodePosition(node)"
+                >
+                    <div :data-id="node.id"
+                        class="absolute h-6 w-6 rounded-full -translate-x-full -translate-y-full"
+                        :class="[nodeClass, {[selectedNodeClass]: node.meta.selected}]">
+                    </div>
+                </Node>
         </template>
         <slot></slot>
-    </div>
+    </component>
 </template>
 
 <style>
