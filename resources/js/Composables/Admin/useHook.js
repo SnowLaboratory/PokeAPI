@@ -43,7 +43,7 @@ export const useHook = (namespace, settings) => {
     }
 
     const getCallbacks = (eventName) => {
-        return Object.values(hooks.value[namespace][eventName] ?? {})
+        return Object.values(hooks.value[namespace]?.[eventName] ?? {})
     }
 
     const createCallbackObject = (callback) => {
@@ -75,9 +75,15 @@ export const useHook = (namespace, settings) => {
 
     const hook = (name, callback, deps) => {
         if (invoke(`onBefore${name}`, ...deps)) return;
-        const resolve = (newDeps) => invoke(`onAfter${name}`, ...newDeps)
-        const reject = (newDeps) => invoke(`onError${name}`, ...newDeps)
-        callback(resolve, reject)
+        const resolve = (...newDeps) => {
+            invoke(`onAfter${name}`, ...newDeps);
+            return newDeps?.[0]
+        }
+        const reject = (...newDeps) => {
+            invoke(`onError${name}`, ...newDeps);
+            return newDeps?.[0]
+        }
+        return callback(resolve, reject)
     }
 
     onMounted(() => {

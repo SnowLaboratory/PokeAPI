@@ -15,11 +15,15 @@ const emit = defineEmits([
 const props = defineProps({
     selectedNodeClass: {
         type: String,
-        default: 'ring-2 ring-black',
+        default: 'ring-black',
     },
     nodeClass: {
         type: String,
-        default: "bg-emerald-300 stroke-slate-600"
+        default: "bg-emerald-300 stroke-slate-600 ring-2"
+    },
+    unselectedClass: {
+        type: String,
+        default: "ring-emerald-600"
     },
     as: {
         type: String,
@@ -53,39 +57,49 @@ const vBindLineElement = (edge) => {
         if (key.startsWith(prefix)) {
             const event = key.slice(prefix.length);
             edge.meta.lineElement.addEventListener(event, e => {
-                e.$line = line
-                e.$el = lineEl
+                e.$line = edge.meta.line
+                e.$el = edge.meta.lineElement
                 e.$edge = edge
                 attrs.value[key].call(undefined, e)
+            })
+            edge.meta.lineElement.addEventListener(event, e => {
+                graph.value.selectEdge(edge.id)
             })
         }
     }
 }
 
+watch(graph.value.selectedEdgeRef, (newValue, oldValue) => {
+    if (newValue) {
+        newValue.meta.lineElement.classList.add('selected')
+    }
+    if (oldValue) {
+        oldValue.meta.lineElement.classList.remove('selected')
+    }
+})
+
 const createLineElement = (edge) => {
-    console.log({edge})
     const p1 = el.value.querySelector(`[data-id="${edge.parent.id}"]`);
     const p2 = el.value.querySelector(`[data-id="${edge.child.id}"]`);
 
-    console.log({p1, p2})
     const line = edge.meta.line ?? new LeaderLine(p1, p2, {hide:true})
 
     if (!edge.meta.lineElement) {
         const lineEl = document.body.querySelector(':scope>svg.leader-line:last-of-type');
         edge.meta.lineElement = lineEl
-        vBindLineElement(lineEl, line)
+        vBindLineElement(edge)
     }
 
     line.startPlugColor = getComputedStyle(p1).stroke
     line.endPlugColor = getComputedStyle(p2).stroke
     line.gradient = true
-    line.path = 'straight'
+    line.path = 'fluid'
     line.size = 6;
     line.startPlugSize = 0.6;
     line.endPlugSize = 0.6;
     line.dash = {
         animation: {
-            duration: 500,
+            duration: 750,
             timing: 'linear'
         }
     }
@@ -148,7 +162,10 @@ const updateNodePosition = (node) => {
                 >
                     <div :data-id="node.id"
                         class="absolute h-6 w-6 rounded-full -translate-x-full -translate-y-full"
-                        :class="[nodeClass, {[selectedNodeClass]: node.meta.selected}]">
+                        :class="[nodeClass, {
+                            [selectedNodeClass]: graph.selectedNode?.id === node.id,
+                            [unselectedClass]: graph.selectedNode?.id !== node.id
+                        }]">
                     </div>
                 </Node>
         </template>
@@ -166,6 +183,7 @@ const updateNodePosition = (node) => {
     }
 
     svg.leader-line use[href^="#leader-line-arrow"] {
+        fill: inherit !important;
         pointer-events: fill !important;
     }
 
@@ -173,13 +191,4 @@ const updateNodePosition = (node) => {
         fill:inherit !important;
     }
 
-    svg.leader-line:hover {
-        fill: blue;
-        cursor: pointer;
-    }
-
-    svg.leader-line:hover .leader-line-line-path {
-        stroke: blue;
-        cursor: pointer;
-    }
 </style>
