@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 use App\Models\Pivot\PokedexEntry;
+use App\Relations\HasManyThroughSelf as RelationsHasManyThroughSelf;
 use App\Traits\HasManyThroughSelf;
 use App\Traits\InteractsWithGlue;
 use App\Traits\NameLookup;
@@ -43,23 +44,27 @@ class Species extends Model implements Glue
         return $this->belongsToMany(Pokedex::class)->using(PokedexEntry::class)->withPivot('entry_number');
     }
 
-    public function chains () {
+    public function chains () :HasMany {
         return $this->hasMany(EvolutionChain::class);
     }
 
-    public function next () {
+    public function next () : RelationsHasManyThroughSelf
+    {
         return $this->hasManyThroughSelf(EvolutionChain::class, 'evolveTo');
     }
 
-    public function evolvesTo () {
+    public function evolvesTo () : RelationsHasManyThroughSelf
+    {
         return $this->next()->with('species.evolvesTo');
     }
 
-    public function previous () {
+    public function previous () : RelationsHasManyThroughSelf
+    {
         return $this->hasManyThroughSelf(EvolutionChain::class, 'evolveFrom');
     }
 
-    public function evolvesFrom () {
+    public function evolvesFrom () : RelationsHasManyThroughSelf
+    {
         return $this->previous()->with('species.evolvesFrom');
     }
 }
