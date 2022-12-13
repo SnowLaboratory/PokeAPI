@@ -3,6 +3,7 @@
 namespace App\Traits;
 
 use App\Models\Glue;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 
 trait InteractsWithGlue {
 
@@ -13,11 +14,13 @@ trait InteractsWithGlue {
         ];
     }
 
-    public function glue() {
+    public function glue() : MorphMany
+    {
         return $this->morphMany(Glue::class, 'base');
     }
 
-    public function gluedWith($name) {
+    public function gluedWith($name) : MorphMany
+    {
         return $this->morphMany(Glue::class, 'base')
             ->with('foreign')
             ->where('name', $name);

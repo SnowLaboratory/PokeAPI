@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\MorphTo;
 
 class Glue extends Model
 {
@@ -19,11 +20,11 @@ class Glue extends Model
         'data' => 'array',
     ];
 
-    public function base() {
+    public function base() : MorphTo {
         return $this->morphTo('base');
     }
 
-    public function foreign() {
+    public function foreign() : MorphTo {
         return $this->morphTo('foreign');
     }
 }

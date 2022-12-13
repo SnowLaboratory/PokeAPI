@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use App\Traits\HasMetas;
 use App\Traits\InteractsWithGlue;
+use Illuminate\Support\Collection;
 
 class EvolutionChain extends Model implements Glue
 {
@@ -21,7 +22,7 @@ class EvolutionChain extends Model implements Glue
         return $this->belongsTo(Species::class);
     }
 
-    public function getItemsAttribute (){
+    public function getItemsAttribute () : Collection {
         $ids = collect($this->meta)->pluck('value.id');
         return Item::whereIn('id', $ids)->get();
 
